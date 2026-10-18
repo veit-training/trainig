@@ -504,13 +504,16 @@ details.cr>summary::-webkit-details-marker{display:none}
 function $(id){return document.getElementById(id);}
 
 /* ---------- Plan und Übungskatalog ---------- */
+/* Plan-Stand 2 (18.10.2026): deine getauschten, entfernten, hinzugefügten und umsortierten Übungen
+   aus der Woche 12.–16.10. sind hier fest als Standard eingebaut. */
+var PLANV=2;
 var BASE={
-Mo:{t:"Brust, Schultern, Trizeps",ex:[["Brustpresse (Maschine)",2,6,9],["Schrägbank-Brustpresse (Maschine)",2,6,9],["Butterfly (Maschine)",2,9,12],["Schulterpresse (Maschine)",2,6,9],["Seitheben (Maschine)",2,9,12],["Trizepsdrücken (Kabel)",2,9,12],["Overhead-Trizeps (Kabel)",2,9,12]]},
-Di:{t:"Rücken + Bizeps",ex:[["Latziehen weit",2,6,9],["Rudern (Maschine/Kabel)",2,6,9],["Latziehen eng",2,6,9],["Face Pulls",2,9,12],["Preacher-Curl (Maschine)",2,9,12],["Hammercurls (Kabel)",2,9,12]]},
+Mo:{t:"Brust, Schultern, Trizeps",ex:[["Schrägbank-Brustpresse (Maschine)",2,6,9],["Butterfly (Maschine)",2,9,12],["Schulterpresse (Maschine)",2,6,9],["Seitheben (Maschine)",2,9,12],["Trizeps an Maschinen mit silbernen white Balls",2,9,12],["Dips",2,9,12]]},
+Di:{t:"Rücken + Bizeps",ex:[["Latziehen weit",2,6,9],["Rudern (Maschine/Kabel)",2,6,9],["Latziehen eng",2,6,9],["Hintere Schulter",2,9,12],["breite hantel im stehen",2,9,12],["Hammer curls kurzhantel im sitzen",2,9,12]]},
 Mi:{t:"Beine",ex:[["Beinpresse",2,6,9],["Beinstrecken",2,9,12],["Beinbeuger",2,9,12],["Wadenheben (Maschine)",2,9,12]]},
-Do:{t:"Brust + Rücken",ex:[["Schrägbank-Brustpresse (Maschine)",2,6,9],["Kabel-Flys",2,9,12],["Assistierte Klimmzüge (Maschine)",2,6,9],["Einarmiges Kabelrudern",2,6,9],["Reverse Fly (Maschine)",2,9,12]]},
-FA:{t:"Schultern + Arme",ex:[["Schulterpresse (Maschine)",2,6,9],["Kabel-Seitheben",2,9,12],["Face Pulls",2,9,12],["Bizeps-Curls (Kabel)",2,9,12],["Trizepsdrücken (Kabel)",2,9,12],["Overhead-Trizeps (Kabel)",2,9,12]]},
-FB:{t:"Brust + Rücken",ex:[["Brustpresse (Maschine)",2,6,9],["Butterfly (Maschine)",2,9,12],["Latziehen weit",2,6,9],["Rudern (Maschine/Kabel)",2,6,9],["Face Pulls",2,9,12]]}
+Do:{t:"Brust + Rücken",ex:[["Schrägbank-Brustpresse (Maschine)",2,6,9],["Kabel obere und untere brust",2,9,12],["Latziehen eng",2,6,9],["Latziehen weit",2,6,9],["T Row",2,9,12]]},
+FA:{t:"Schultern + Arme",ex:[["Schulterpresse (Maschine)",2,6,9],["Kabel-Seitheben",2,9,12],["Hintere Schulter",2,9,12],["Bizeps-Curls (im sitzen Kurzhantel)",2,9,12],["Bizeps breite Hantel im stehen",2,9,12],["Trizeps an Maschinen mit silbernen white Balls",2,9,12],["Dips",2,9,12]]},
+FB:{t:"Brust + Rücken",ex:[["Brustpresse (Maschine)",2,6,9],["Butterfly (Maschine)",2,9,12],["Latziehen weit",2,6,9],["Rudern (Maschine/Kabel)",2,6,9],["Hintere Schulter",2,9,12]]}
 };
 var KEYS=["Mo","Di","Mi","Do","FA","FB"], DAYS=["Mo","Di","Mi","Do","Fr"];
 var DAYN={Mo:"Montag",Di:"Dienstag",Mi:"Mittwoch",Do:"Donnerstag",Fr:"Freitag"};
@@ -562,6 +565,17 @@ var NEWEX={
 "Beinabduktoren (Maschine)":["ext","Po (seitlich)","Sitz einstellen, Polster außen an den Knien. Beine kontrolliert nach außen drücken. Kurz halten. Langsam zurückführen."],
 "Wadenheben sitzend (Maschine)":["calf","Waden (tiefer Wadenmuskel)","Knie unter das Polster, Ballen auf die Kante. Ferse tief absenken. Ganz hoch auf die Zehen drücken. Oben kurz halten."]};
 Object.keys(NEWEX).forEach(function(k){HOW[k]=[NEWEX[k][0],NEWEX[k][2]];MUS[k]=NEWEX[k][1];});
+/* Deine eigenen Übungen: [Symbol, Muskeln, Muskelgruppe, Anleitung (optional)] */
+var OWN={
+"Kabel obere und untere brust":["fly","Obere und untere Brust","Brust","Satz 1–2 (obere Brust): Kabel unten einstellen, Griffe mit leicht gebeugten Ellbogen im Bogen schräg nach oben vor die Brust führen. Satz 3–4 (untere Brust): Kabel oben einstellen, Griffe im Bogen nach unten vor die Körpermitte führen. Jeweils kurz anspannen. Kontrolliert zurück bis zur Dehnung."],
+"T Row":["pull","Mittlerer Rücken, Lat","Rücken","Brust ans Polster oder Oberkörper stabil vorgebeugt, Rücken gerade. Griffe zum Bauch ziehen, Ellbogen nah am Körper. Schulterblätter zusammendrücken. Langsam zurück, ohne Schwung."],
+"Hintere Schulter":["raise","Hintere Schulter, oberer Rücken","Schultern"],
+"breite hantel im stehen":["curl","Bizeps","Bizeps"],
+"Bizeps breite Hantel im stehen":["curl","Bizeps","Bizeps"],
+"Bizeps-Curls (im sitzen Kurzhantel)":["curl","Bizeps","Bizeps"],
+"Hammer curls kurzhantel im sitzen":["curl","Oberarmmuskel (Brachialis), Unterarm","Bizeps"],
+"Trizeps an Maschinen mit silbernen white Balls":["ext","Trizeps","Trizeps"],
+"Dips":["push","Trizeps, untere Brust","Trizeps"]};
 
 /* ---------- Hilfsfunktionen ---------- */
 function P(s){var p=s.split("-");return new Date(+p[0],+p[1]-1,+p[2]);}
@@ -679,10 +693,14 @@ function applyRm(lg,r){var out={};Object.keys(lg).forEach(function(n){var a=lg[n
 
 /* ---------- Zustand ---------- */
 var K="trainings-tracker-v2",KO="trainings-tracker-v1",KU="trainings-tracker-ui",KT="trainings-tracker-timer",KS="trainings-tracker-session";
-var log={},weeks={},rm={},SW={},SWD={},AD={},HD={},OD={},BW={},BM={},swT=0,legacyLocal=false;
+var log={},weeks={},rm={},SW={},SWD={},AD={},HD={},OD={},BW={},BM={},swT=0,legacyLocal=false,planV=PLANV;
+/* Ältere Tausch-, Entfernen- und Reihenfolge-Einstellungen sind seit Plan-Stand 2 fest im Plan.
+   Damit nichts doppelt wirkt, werden sie beim ersten Start einmal zurückgesetzt. */
+function migratePlan(){if(planV<PLANV){SW={};SWD={};AD={};HD={};OD={};planV=PLANV;swT=Date.now();swDirty=true;}}
 (function(){
   var raw=lsGet(K);
-  if(raw){try{var o=JSON.parse(raw);log=mergeLog({},cleanLog(o.log));weeks=cleanWeeks(o.weeks);rm=cleanRm(o.rm);SW=cleanMap(o.sw);SWD=cleanSwd(o.swd);AD=cleanAd(o.ad);HD=cleanHd(o.hd);OD=cleanHd(o.od);BW=cleanBw(o.bw);BM=cleanBm(o.bm);swT=+o.swt||0;}catch(e){}}
+  if(raw){try{var o=JSON.parse(raw);log=mergeLog({},cleanLog(o.log));weeks=cleanWeeks(o.weeks);rm=cleanRm(o.rm);SW=cleanMap(o.sw);SWD=cleanSwd(o.swd);AD=cleanAd(o.ad);HD=cleanHd(o.hd);OD=cleanHd(o.od);BW=cleanBw(o.bw);BM=cleanBm(o.bm);swT=+o.swt||0;planV=+o.pv||1;}catch(e){}}
+  migratePlan();
   var old=lsGet(KO);
   if(old){try{log=mergeLog(cleanLog(JSON.parse(old)),log);}catch(e){}legacyLocal=true;}
   log=applyRm(log,rm);
@@ -702,7 +720,7 @@ try{var ss0=JSON.parse(lsGet(KS)||"null");if(ss0&&DRE.test(ss0.d)&&+ss0.start>0&
 
 /* ---------- Plan auflösen (Tausch pro Tag oder für alle Tage) ---------- */
 /* Brustübung mit Bereichen: in einer Karte 2 Sätze obere und 2 Sätze untere Brust (Donnerstag, Kabel-Flys). */
-var SPLIT={Do:{"Kabel-Flys":1}};
+var SPLIT={Do:{"Kabel obere und untere brust":1}};
 function isChest(it){return GR["Brust"].indexOf(it.o)>-1||GR["Brust"].indexOf(it.n)>-1;}
 function frv(d){var w=Math.round((P(mon(d))-P("2026-09-28"))/6048e5);return ((w%2)+2)%2===0?"FA":"FB";}
 function curKey(){return ui.day==="Fr"?(ui.frPick||frv(ui.tdate)):ui.day;}
@@ -710,7 +728,7 @@ function resolve(k,o){var m=SWD[k];if(m&&Object.prototype.hasOwnProperty.call(m,
 function planList(k){
   var hid=HD[k]||[];
   var b=BASE[k].ex.filter(function(e){return hid.indexOf(e[0])<0;}).map(function(e){var sp=!!(SPLIT[k]&&SPLIT[k][e[0]]);return {o:e[0],n:resolve(k,e[0]),s:sp?4:e[1],lo:e[2],hi:e[3],ad:-1,sp:sp};});
-  (AD[k]||[]).forEach(function(a,i){b.push({o:a[0],n:resolve(k,a[0]),s:a[1],lo:a[2],hi:a[3],ad:i});});
+  (AD[k]||[]).forEach(function(a,i){var nn=resolve(k,a[0]);if(b.some(function(e){return e.n===nn;}))return;b.push({o:a[0],n:nn,s:a[1],lo:a[2],hi:a[3],ad:i});});
   var od=OD[k];
   if(od&&od.length){
     var pos=function(o){var j=od.indexOf(o);return j<0?1e6:j;};
@@ -753,8 +771,9 @@ function guessType(n){
   return null;
 }
 function exInfo(n,o){
-  var h=known(n);
+  var h=known(n),w=OWN[n];
   if(h)return {t:h[0],steps:h[1],mus:MUS[ALIAS[n]||n]||"",own:false};
+  if(w)return {t:w[0],steps:w[3]||null,mus:w[1],own:false};
   var t=guessType(n);if(!t&&o&&known(o))t=known(o)[0];
   return {t:t,steps:null,mus:"",own:true};
 }
@@ -797,6 +816,7 @@ function svgI(n,s){s=s||22;return '<svg width="'+s+'" height="'+s+'" viewBox="0 
 /* ---------- Muskelgruppen ---------- */
 var MG=["Brust","Rücken","Schultern","Bizeps","Trizeps","Beine"],GMAP={};
 [["Brust","Brust"],["Schulter","Schultern"],["Trizeps","Trizeps"],["Rücken","Rücken"],["Bizeps","Bizeps"],["Beine","Beine"]].forEach(function(p){GR[p[0]].forEach(function(n){if(!GMAP[n])GMAP[n]=p[1];});});
+Object.keys(OWN).forEach(function(n){GMAP[n]=OWN[n][2];});
 function mgroup(n){
   var g=GMAP[n]||GMAP[ALIAS[n]];if(g)return g;
   var s=String(n).toLowerCase();
@@ -1011,7 +1031,7 @@ function yearBody(y){
   var b={log:l,weeks:w};if(hasR)b.rm=r;return b;
 }
 function saveLocal(){
-  var ok=lsSet(K,JSON.stringify({v:4,log:log,weeks:weeks,rm:rm,sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,bw:BW,bm:BM,swt:swT}));
+  var ok=lsSet(K,JSON.stringify({v:4,log:log,weeks:weeks,rm:rm,sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,bw:BW,bm:BM,swt:swT,pv:planV}));
   if(ok&&legacyLocal){lsDel(KO);legacyLocal=false;}
 }
 function persist(){
@@ -1044,7 +1064,7 @@ async function flush(){
   try{
     do{
       again=false;
-      if(swDirty){swDirty=false;try{await db.doc("tracker/swaps").set({sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,t:swT});}catch(e){swDirty=true;err=e;}}
+      if(swDirty){swDirty=false;try{await db.doc("tracker/swaps").set({sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,t:swT,pv:planV});}catch(e){swDirty=true;err=e;}}
       if(bwDirty){bwDirty=false;var bb={w:BW,m:BM},bj=stable(bb);if(bj!==remoteBody){try{await db.doc("tracker/body").set(bb);remoteBody=bj;}catch(e){bwDirty=true;err=e;}}}
       var ys=Object.keys(dirty);dirty={};
       for(var i=0;i<ys.length;i++){
@@ -1074,8 +1094,9 @@ async function pull(){
   rm=mergeRm(rr,rm);log=applyRm(mergeLog(rl,log),rm);weeks=mergeWeeks(rw,weeks);BW=mergeBw(rb,BW);BM=mergeBw(rbm,BM);
   if((Object.keys(BW).length||Object.keys(BM).length||remoteBody)&&stable({w:BW,m:BM})!==remoteBody)bwDirty=true;
   var rt=sw?(+sw.t||0):0;
-  if(sw&&rt>swT){SW=cleanMap(sw.sw);SWD=cleanSwd(sw.swd);AD=cleanAd(sw.ad);HD=cleanHd(sw.hd);OD=cleanHd(sw.od);swT=rt;}
+  if(sw&&rt>swT){SW=cleanMap(sw.sw);SWD=cleanSwd(sw.swd);AD=cleanAd(sw.ad);HD=cleanHd(sw.hd);OD=cleanHd(sw.od);swT=rt;planV=+sw.pv||1;}
   else if(swT>rt)swDirty=true;
+  migratePlan();
   var ys={};Object.keys(seen).concat(stateYears()).forEach(function(y){ys[y]=1;});
   Object.keys(ys).forEach(function(y){if(stable(yearBody(y))!==remote[y])dirty[y]=1;});
   saveLocal();lastPull=Date.now();
@@ -1968,7 +1989,7 @@ window.addEventListener("pagehide",function(){flushDrafts();});
 
 function exportData(){
   flushDrafts();
-  var data=JSON.stringify({app:"trainings-tracker",v:5,exportiert:new Date().toISOString(),log:log,weeks:weeks,sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,bw:BW,bm:BM},null,1),fn="trainings-tracker-"+today()+".json";
+  var data=JSON.stringify({app:"trainings-tracker",v:5,exportiert:new Date().toISOString(),log:log,weeks:weeks,sw:SW,swd:SWD,ad:AD,hd:HD,od:OD,bw:BW,bm:BM,pv:planV},null,1),fn="trainings-tracker-"+today()+".json";
   if(dl){dl.save({filename:fn,data:data}).then(function(r){markBackup();toast(r&&r.status==="delivered"?"Sicherung übergeben":"Sicherung gespeichert");}).catch(function(e){toast(e&&e.code==="declined"?"Sicherung abgebrochen":e&&e.code==="rate_limited"?"Bitte kurz warten und erneut versuchen":"Sicherung ist hier nicht möglich");});return;}
   /* Eigenständige App (Home-Bildschirm): Datei über das Teilen-Menü („In Dateien sichern“) oder als Download speichern. */
   if(APP){
@@ -1999,9 +2020,15 @@ function importFile(f){
     Object.keys(iw).forEach(function(k){if(weeks[k])return;var w=iw[k];w.t=now;weeks[k]=w;mark(k.slice(0,4));addW++;});
     Object.keys(ib).forEach(function(d){if(BW[d]||ib[d].v===null)return;BW[d]={v:ib[d].v,u:now};addB++;});
     var ibm=cleanBm(o.bm);Object.keys(ibm).forEach(function(d){if(BM[d]||!ibm[d].v)return;BM[d]={v:ibm[d].v,u:now};addB++;});
+    /* Plan-Änderungen (Tauschen, Hinzufügen, Entfernen, Reihenfolge) aus neueren Sicherungen übernehmen, wenn hier noch keine gemacht wurden. */
+    var noLocalPlan=![SW,SWD,AD,HD,OD].some(function(m){return Object.keys(m).length;}),addP=0;
+    if((+o.pv||1)>=PLANV&&noLocalPlan){
+      var isw=cleanMap(o.sw),iswd=cleanSwd(o.swd),iad=cleanAd(o.ad),ihd=cleanHd(o.hd),iod=cleanHd(o.od);
+      if([isw,iswd,iad,ihd,iod].some(function(m){return Object.keys(m).length;})){SW=isw;SWD=iswd;AD=iad;HD=ihd;OD=iod;swT=now;swDirty=true;addP=1;addB+=0;}
+    }
     if(addB)bwDirty=true;
-    ui.importMsg=addE||addW||addB?"Import fertig: "+addE+(addE===1?" Eintrag":" Einträge")+(addW?", "+addW+(addW===1?" Woche":" Wochen"):"")+(addB?", "+addB+(addB===1?" Körpereintrag":" Körpereinträge"):"")+" übernommen.":"Alles aus dieser Datei ist schon vorhanden.";
-    if(addE||addW||addB)persist();
+    ui.importMsg=addE||addW||addB||addP?"Import fertig: "+addE+(addE===1?" Eintrag":" Einträge")+(addW?", "+addW+(addW===1?" Woche":" Wochen"):"")+(addB?", "+addB+(addB===1?" Körpereintrag":" Körpereinträge"):"")+(addP?" und deine Plan-Änderungen":"")+" übernommen.":"Alles aus dieser Datei ist schon vorhanden.";
+    if(addE||addW||addB||addP)persist();
     render();toast(ui.importMsg);
   };
   r.onerror=function(){ui.importMsg="Die Datei konnte nicht gelesen werden.";render();};
