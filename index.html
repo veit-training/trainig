@@ -1322,8 +1322,9 @@ function setSel(d,k){if(getSel(d)===(k||null))return;var m=mon(d),o=weeks[m]||{}
 /* ---------- Auswertungen ---------- */
 function svol(s){var v=0;s.forEach(function(t){sides(t).forEach(function(x){if(x[0]!==null)v+=x[0]*x[1];});});return v;}
 function e1(w,r){return r<=1?w:w*(1+r/30);}
-function bestE(s){var b=null;s.forEach(function(t){sides(t).forEach(function(x){if(x[0]===null||!(x[0]>0)||!(x[1]>0))return;var e=e1(x[0],x[1]);if(!b||e>b.e)b={e:e,w:x[0],r:x[1]};});});return b;}
-function prevBest(n,d){var b=null;(log[n]||[]).forEach(function(x){if(x.d>=d)return;var q=bestE(x.s);if(q&&(!b||q.e>b.e))b=q;});return b;}
+/* Stärkster Satz nach geschätztem 1RM. Bei Dips/Klimmzügen zählt das Körpergewicht mit (Gewicht = Zusatzgewicht). */
+function bestE(s,n,d){var bw=n&&bwEx(n)?(bwAt(d||today())||80):0,b=null;s.forEach(function(t){sides(t).forEach(function(x){var L=bw?loadOf(n,x[0],bw):(x[0]>0?x[0]:null);if(!L||!(x[1]>0))return;var e=e1(L,x[1]);if(!b||e>b.e)b={e:e,w:x[0],r:x[1]};});});return b;}
+function prevBest(n,d){var b=null;(log[n]||[]).forEach(function(x){if(x.d>=d)return;var q=bestE(x.s,n,x.d);if(q&&(!b||q.e>b.e))b=q;});return b;}
 /* Bestleistungen: geschätztes 1RM (Epley) aus Gewicht und Wiederholungen. */
 function prData(){return memo("pr",prData0);}
 function prData0(){
@@ -1331,7 +1332,7 @@ function prData0(){
   Object.keys(log).forEach(function(n){
     var b=null;
     log[n].forEach(function(x){
-      var q=bestE(x.s);if(!q)return;
+      var q=bestE(x.s,n,x.d);if(!q)return;
       if(b&&q.e>b.e+0.05)list.push({n:n,d:x.d,w:q.w,r:q.r,e:q.e,prev:b});
       if(!b||q.e>b.e)b={e:q.e,w:q.w,r:q.r,d:x.d};
     });
@@ -1673,14 +1674,25 @@ function recommend(){
 /* ---------- Rang-System: Kraft im Verhältnis zum Körpergewicht, je Übung, Muskelgruppe und Körper ---------- */
 var TIERS=[["Eisen","#5f666f","#a8afb8","#8b929b"],["Bronze","#7d4f2c","#d89a66","#b9824f"],["Silber","#7f8a96","#e6ebf1","#c7cfd8"],["Gold","#a87b1f","#f6d874","#e2bd55"],["Rubin","#8f1631","#f2607c","#e04b68"],["Smaragd","#0c6b47","#5bdca4","#3fbf86"],["Diamant","#1f6fa6","#9ae2ff","#6cc9f2"],["Champion","#5a37b0","#cbb3ff","#a689f2"],["Legende","#a7801a","#fff2c4","#f4dc86"]];
 var RT=[0,.35,.55,.75,.95,1.15,1.4,1.7,2.0],RN=["I","II","III"];
-/* Richtwert je Übung: geschätztes Maximalgewicht (1RM) geteilt durch Körpergewicht, das „Rubin I“ entspricht (≈ fortgeschritten). */
-var REF={"Brustpresse (Maschine)":1.0,"Schrägbank-Brustpresse (Maschine)":.85,"Butterfly (Maschine)":.8,"Kabel-Flys":.45,"Kabel obere und untere brust":.45,"Kabel-Flys von oben":.45,"Kabel-Flys von unten":.4,"Dip-Maschine (sitzend)":1.1,"Dips":1.6,
-  "Schulterpresse (Maschine)":.75,"Seitheben (Maschine)":.2,"Kabel-Seitheben":.15,"Kabel-Seitheben einarmig":.13,"Frontheben (Kabel)":.18,"Reverse Fly (Maschine)":.55,"Reverse Fly (Kabel)":.2,"Hintere Schulter":.9,"Face Pulls":.45,
-  "Trizepsdrücken (Kabel)":.35,"Overhead-Trizeps (Kabel)":.3,"Trizepsdrücken einarmig (Kabel)":.18,"Trizeps-Maschine":.6,"Kabel-Kickbacks":.12,"Trizeps an Maschinen mit silbernen white Balls":.6,
-  "Latziehen weit":.9,"Latziehen eng":.9,"Latziehen Untergriff":.9,"Rudern (Maschine/Kabel)":.9,"Brustgestütztes Rudern (Maschine)":.9,"Einarmiges Kabelrudern":.45,"Gerades Armziehen (Kabel)":.4,"T Row":.9,"Assistierte Klimmzüge (Maschine)":1.0,
-  "Bizeps-Curls (Kabel)":.4,"Preacher-Curl (Maschine)":.45,"Hammercurls (Kabel)":.3,"Bizeps-Curl (Maschine)":.45,"Einarmiger Kabelcurl":.2,"Kabelcurl am hohen Kabel":.2,"Bizeps-Curls (im sitzen Kurzhantel)":.2,"Hammer curls kurzhantel im sitzen":.22,"breite hantel im stehen":.6,"Bizeps breite Hantel im stehen":.6,
-  "Beinpresse":2.5,"Beinstrecken":.9,"Beinbeuger":.7,"Beinbeuger liegend (Maschine)":.6,"Hacksquat (Maschine)":1.6,"Beinabduktoren (Maschine)":1.0,"Wadenheben (Maschine)":1.4,"Wadenheben sitzend (Maschine)":1.0};
-var TREF={push:.8,pull:.85,fly:.55,raise:.25,curl:.3,ext:.4,squat:2,calf:1.2,hinge:1.5};
+/* Richtwert je Übung: geschätztes Maximalgewicht (1RM) geteilt durch Körpergewicht, das „Rubin I“ entspricht.
+   Angelehnt an übliche Kraft-Richtwerte für Männer: Rubin ≈ solides mittleres Niveau, Diamant ≈ fortgeschritten, Champion ≈ Spitze.
+   Kurzhanteln und einarmige Kabelübungen zählen pro Hantel bzw. pro Arm, Langhantel und Maschinen mit dem ganzen Gewicht.
+   Bei Dips und Klimmzügen ist das eingetragene Gewicht Zusatzgewicht: gerechnet wird Körpergewicht + Zusatz. */
+var REF={"Brustpresse (Maschine)":1.15,"Schrägbank-Brustpresse (Maschine)":.95,"Butterfly (Maschine)":1.0,"Kabel-Flys":.45,"Kabel obere und untere brust":.45,"Kabel-Flys von oben":.45,"Kabel-Flys von unten":.4,"Dip-Maschine (sitzend)":1.2,"Dips":1.55,"Multipresse mit sitz":.9,
+  "Schulterpresse (Maschine)":.9,"Seitheben (Maschine)":.2,"Kabel-Seitheben":.2,"Kabel-Seitheben einarmig":.2,"Frontheben (Kabel)":.2,"Reverse Fly (Maschine)":.8,"Reverse Fly (Kabel)":.2,"Hintere Schulter":.95,"Face Pulls":.5,
+  "Trizepsdrücken (Kabel)":.65,"Overhead-Trizeps (Kabel)":.45,"Trizepsdrücken einarmig (Kabel)":.25,"Trizeps-Maschine":.7,"Kabel-Kickbacks":.15,"Trizeps an Maschinen mit silbernen white Balls":.7,"Trizeps Maschine white balls":.7,
+  "Latziehen weit":1.0,"Latziehen eng":1.0,"Latziehen Untergriff":1.0,"Rudern (Maschine/Kabel)":1.05,"Brustgestütztes Rudern (Maschine)":1.05,"Rudern eng":1.05,"Einarmiges Kabelrudern":.5,"Gerades Armziehen (Kabel)":.45,"T Row":1.05,"Assistierte Klimmzüge (Maschine)":1.0,
+  "Bizeps-Curls (Kabel)":.5,"Preacher-Curl (Maschine)":.55,"Hammercurls (Kabel)":.4,"Bizeps-Curl (Maschine)":.55,"Einarmiger Kabelcurl":.25,"Kabelcurl am hohen Kabel":.25,"Bizeps-Curls (im sitzen Kurzhantel)":.27,"Hammer curls kurzhantel im sitzen":.29,"Hammercurls im sitzen kurzhantel":.29,"breite hantel im stehen":.58,"Bizeps breite Hantel im stehen":.58,
+  "Beinpresse":3.2,"Beinstrecken":1.3,"Beinbeuger":1.0,"Beinbeuger liegend (Maschine)":.9,"Hacksquat (Maschine)":1.9,"Beinabduktoren (Maschine)":1.2,"Wadenheben (Maschine)":1.6,"Wadenheben sitzend (Maschine)":1.2};
+var TREF={push:.9,pull:1.0,fly:.6,raise:.25,curl:.5,ext:.6,squat:2.4,calf:1.4,hinge:1.6};
+/* Richtwerte pro Hantel für Übungen, die „Kurzhantel“ im Namen tragen und oben nicht einzeln stehen */
+var KHREF={push:.42,pull:.5,fly:.3,raise:.17,curl:.27,ext:.25};
+function khEx(n){return /kurzhantel|\bkh\b|dumbbell/.test(String(n).toLowerCase());}
+/* Übungen mit dem eigenen Körper: das eingetragene Gewicht ist Zusatzgewicht (bei „assistiert“ die Entlastung) */
+function bwEx(n){var s=String(n).toLowerCase();if(/assist/.test(s))return true;if(/maschine/.test(s))return false;return /(^|[\s(])dips?(\b|$)|klimmz|liegestütz|\bchin-?ups?\b|\bpull-?ups?\b/.test(s);}
+/* Satz als Text, bei Übungen mit dem eigenen Körper mit „Körpergewicht + …“ */
+function wLbl(n,w,r){return bwEx(n)?(w>0?"Körpergewicht + "+nf(w)+" kg":"Körpergewicht")+" × "+r:nf(w)+" kg × "+r;}
+function wBig(n,w,r){return (bwEx(n)?(w>0?'+'+nf(w)+'<small>kg</small>':'<small>Körper</small>'):nf(w)+'<small>kg</small>')+'<span class="prx">×</span>'+r;}
 function stepOf(s){
   if(s>=RT[8])return {st:24,f:1};
   for(var i=7;i>=0;i--){if(s>=RT[i]){var f=(s-RT[i])/(RT[i+1]-RT[i]),d=Math.min(2,Math.floor(f*3));return {st:i*3+d,f:Math.max(0,Math.min(1,f*3-d))};}}
@@ -1688,11 +1700,11 @@ function stepOf(s){
 }
 function tierOf(st){return Math.min(8,Math.floor(st/3));}
 function rankName(st){var t=tierOf(st);return t===8?TIERS[8][0]:TIERS[t][0]+" "+RN[st%3];}
-function exRef(n){if(REF[n])return REF[n];var t=exInfo(n,n).t;return TREF[t]||.6;}
+function exRef(n){if(REF[n])return REF[n];var t=exInfo(n,n).t;if(khEx(n))return KHREF[t]||.3;return TREF[t]||.7;}
 function loadOf(n,kg,bw){
   var s=String(n).toLowerCase();
   if(/assist/.test(s))return kg===null?null:Math.max(bw*.1,bw-kg);
-  if(/(^|[\s(])dips?(\b|$)|klimmz|liegestütz|\bchin-?ups?\b|\bpull-?ups?\b/.test(s))return bw+(kg||0);
+  if(bwEx(n))return bw+(kg||0);
   return kg>0?kg:null;
 }
 function rankData(){
@@ -1859,7 +1871,7 @@ function rRank(){
   if(sel&&rd.groups[sel]){
     var gr=rd.groups[sel];
     h+='<div class="rdet"><div class="rdh">'+badge(gr.rk.st,44)+'<div style="min-width:0;flex:1"><b>'+sel+' · '+esc(rankName(gr.rk.st))+'</b>'+rprog(gr.rk,tierColor(gr.rk.st))+'<small class="m">'+pts(gr.s)+' Punkte · '+esc(nextTxt(gr.rk))+'</small></div></div><div class="rl">'
-      +gr.ex.map(function(n){var e=rd.ex[n],bwOnly=e.best.w===null||e.best.w===0;return '<button class="rrow rbtn" data-a="exst" data-n="'+esc(n)+'"><span><b>'+esc(n)+'</b><br><small>Bester Satz: '+(bwOnly?e.best.r+' Wdh.':nf(e.best.w)+' kg × '+e.best.r)+(e.out?' · zählt nicht für die Gruppe (Ausreißer)':'')+'</small></span><span class="rv rex">'+badge(e.rk.st,26)+'<small class="m">'+esc(rankName(e.rk.st))+'</small></span></button>';}).join("")+'</div></div>';
+      +gr.ex.map(function(n){var e=rd.ex[n],bwOnly=e.best.w===null||e.best.w===0;return '<button class="rrow rbtn" data-a="exst" data-n="'+esc(n)+'"><span><b>'+esc(n)+'</b><br><small>Bester Satz: '+(bwEx(n)?wLbl(n,e.best.w,e.best.r):bwOnly?e.best.r+' Wdh.':nf(e.best.w)+' kg × '+e.best.r)+(e.out?' · zählt nicht für die Gruppe (Ausreißer)':'')+'</small></span><span class="rv rex">'+badge(e.rk.st,26)+'<small class="m">'+esc(rankName(e.rk.st))+'</small></span></button>';}).join("")+'</div></div>';
   }
   h+='</section>';
   /* Stärken-Profil: alle Gruppen im Vergleich, die stärkste zuerst */
@@ -2413,7 +2425,7 @@ function recCard(ix,m0){
   return h+'</section>';
 }
 /* Stärke-Verlauf einer Übung als kleine Linie */
-function e1Series(n){var o=[];(log[n]||[]).forEach(function(x){var q=bestE(x.s);if(q)o.push(q.e);});return o;}
+function e1Series(n){var o=[];(log[n]||[]).forEach(function(x){var q=bestE(x.s,n,x.d);if(q)o.push(q.e);});return o;}
 function sparkMini(v,w,h){
   if(v.length<2)return '<span class="spk" style="width:'+w+'px;height:'+h+'px"></span>';
   var mn=Math.min.apply(null,v),mx=Math.max.apply(null,v);if(mx===mn){mx+=1;mn-=1;}
@@ -2424,7 +2436,7 @@ function sparkMini(v,w,h){
 function prCard(p){
   var e=rankData().ex[p.n];
   return '<button class="prc" data-a="exst" data-n="'+esc(p.n)+'" style="--mc:'+(e?tierColor(e.rk.st):'var(--chalk)')+'"><span class="prt">'+(e?badge(e.rk.st,34):'<span class="prtr">'+svgI("trophy",20)+'</span>')+'<span class="prd">'+esc(relDay(p.d)||fmt(p.d))+'</span></span>'
-    +'<b class="prn2">'+esc(shortEx(p.n))+'</b><span class="prv">'+nf(p.w)+'<small>kg</small><span class="prx">×</span>'+p.r+'</span>'
+    +'<b class="prn2">'+esc(shortEx(p.n))+'</b><span class="prv">'+wBig(p.n,p.w,p.r)+'</span>'
     +'<span class="prg">'+(p.prev?'▲ '+NF1.format(p.e-p.prev.e)+' kg stärker':'≈ '+NF1.format(p.e)+' kg 1RM')+'</span>'+sparkMini(e1Series(p.n).slice(-8),112,26)+'</button>';
 }
 function prShelf(){
@@ -2598,7 +2610,7 @@ function rStats(){
   }
   var names=Object.keys(pr.best).sort(function(a,b){var x=pr.best[a].d,y=pr.best[b].d;return x<y?1:x>y?-1:a<b?-1:1;}),shown=ui.recAll?names:names.slice(0,6),rdx=rankData().ex;
   h+='<section class="card"><div class="ch"><h2>Rekorde</h2><span class="m">bester Satz je Übung</span></div>'
-    +(names.length?'<div class="recg">'+shown.map(function(n){var b=pr.best[n],e=rdx[n];return '<button class="rct2" data-a="exst" data-n="'+esc(n)+'" style="--mc:'+(e?tierColor(e.rk.st):'var(--chalk)')+'"><span class="rc2h">'+(e?badge(e.rk.st,28):'')+'<small>'+esc(fmt(b.d))+'</small></span><b>'+esc(shortEx(n))+'</b><span class="prv">'+nf(b.w)+'<small>kg</small><span class="prx">×</span>'+b.r+'</span><small class="m">≈ '+NF1.format(b.e)+' kg 1RM</small></button>';}).join("")+'</div>'+(names.length>6?'<div style="margin-top:10px"><button class="lnk" data-a="recall">'+(ui.recAll?'Weniger anzeigen':'Alle '+names.length+' Übungen anzeigen')+'</button></div>':'')
+    +(names.length?'<div class="recg">'+shown.map(function(n){var b=pr.best[n],e=rdx[n];return '<button class="rct2" data-a="exst" data-n="'+esc(n)+'" style="--mc:'+(e?tierColor(e.rk.st):'var(--chalk)')+'"><span class="rc2h">'+(e?badge(e.rk.st,28):'')+'<small>'+esc(fmt(b.d))+'</small></span><b>'+esc(shortEx(n))+'</b><span class="prv">'+wBig(n,b.w,b.r)+'</span><small class="m">≈ '+NF1.format(b.e)+' kg 1RM</small></button>';}).join("")+'</div>'+(names.length>6?'<div style="margin-top:10px"><button class="lnk" data-a="recall">'+(ui.recAll?'Weniger anzeigen':'Alle '+names.length+' Übungen anzeigen')+'</button></div>':'')
     :'<p class="m" style="margin:0;font-size:14px">Noch keine Sätze mit Gewicht eingetragen.</p>')+'</section>';
   var A=achData(ix,pr,st),on=A.filter(function(a){return a.on;}).length;
   h+='<section class="card"><div class="ch"><h2>Erfolge</h2><span class="m">'+on+' von '+A.length+'</span></div><div class="ach">'+A.map(function(a){return '<div class="acb'+(a.on?' on':'')+'"><span class="ai">'+svgI(a.i,18)+'</span><div style="min-width:0;flex:1"><b>'+esc(a.t)+'</b><small>'+esc(a.d)+'</small>'+(a.on?'<small class="pos">Freigeschaltet</small>':'<div class="aprog" role="img" aria-label="Fortschritt '+aProg(a)+'"><i style="width:'+Math.min(100,a.v/a.g*100).toFixed(1)+'%"></i></div><small>'+aProg(a)+'</small>')+'</div></div>';}).join("")+'</div></section>';
@@ -2633,12 +2645,12 @@ function setChips(s){
 function exHtml(n){
   var a=log[n]||[],sets=0,vol=0,best=null,ptsL=[],e=rankData().ex[n],prD={};
   prData().list.forEach(function(p){if(p.n===n)prD[p.d]=1;});
-  a.forEach(function(x){sets+=x.s.length;vol+=svol(x.s);var q=bestE(x.s);if(q){if(!best||q.e>best.e)best={e:q.e,w:q.w,r:q.r,d:x.d};ptsL.push({d:x.d,v:Math.round(q.e*10)/10});}});
+  a.forEach(function(x){sets+=x.s.length;vol+=svol(x.s);var q=bestE(x.s,n,x.d);if(q){if(!best||q.e>best.e)best={e:q.e,w:q.w,r:q.r,d:x.d};ptsL.push({d:x.d,v:Math.round(q.e*10)/10});}});
   var g=mgroup(n),h='<div class="sh"><h2 id="sheet-t">'+esc(n)+'</h2><button class="btn sm ghost" data-a="shut">Schließen</button></div>';
   if(!a.length)return h+'<p class="m">'+esc((g?g+' · ':'')+'noch keine Einträge')+'</p>';
   h+='<div class="exhd">'+(e?badge(e.rk.st,52):'')+'<div><b>'+(e?esc(rankName(e.rk.st)):'Noch ohne Rang')+'</b><small class="m">'+esc((g?g+' · ':'')+'seit '+fmtY(a[0].d))+'</small>'+(e?rprog(e.rk,tierColor(e.rk.st)):'')+'</div></div>';
   h+='<div class="tiles4">'+mtile("Trainings",a.length)+mtile("Sätze",sets)+mtile("Bestes 1RM",best?"≈ "+NF1.format(best.e)+"<small> kg</small>":"–")+mtile("Volumen",fVol(vol))+'</div>';
-  if(best)h+='<p>Bester Satz: <b>'+nf(best.w)+' kg × '+best.r+'</b> am '+fmtY(best.d)+'</p>';
+  if(best)h+='<p>Bester Satz: <b>'+wLbl(n,best.w,best.r)+'</b> am '+fmtY(best.d)+'</p>';
   if(e&&e.lr){var df=Math.round((e.lr[1]/e.lr[0]-1)*100);h+='<p class="m">Links ≈ '+NF1.format(e.lr[0])+' kg, rechts ≈ '+NF1.format(e.lr[1])+' kg (geschätztes 1RM). '+(Math.abs(df)<3?'Beide Seiten sind gleich stark.':(df>0?'Rechts':'Links')+' ist '+Math.abs(df)+' % stärker.')+'</p>';}
   if(ptsL.length>=2)h+='<div class="setg"><h3 class="lbl">Geschätztes 1RM pro Training</h3>'+lineChart(ptsL,{h:160,aria:"Geschätztes Maximalgewicht von "+n+" im Verlauf"})+'</div>';
   h+='<div class="setg"><h3 class="lbl">Alle Einträge</h3><div class="rl">'+a.slice().reverse().map(function(x){return '<button class="erow rbtn" data-a="dayopen" data-d="'+x.d+'"><span><b>'+esc(fmtY(x.d))+'</b>'+(prD[x.d]?'<span class="prb">'+svgI("trophy",12)+'Bestleistung</span>':'')+'<br><small>'+esc(ago(x.d))+' · '+fVol(svol(x.s))+'</small></span>'+setChips(x.s)+'</button>';}).join("")+'</div></div>';
@@ -2650,7 +2662,7 @@ function sumText(d,dur){
   L.push((dur?fDur(dur)+" · ":"")+di.n+(di.n===1?" Übung":" Übungen")+" · "+di.sets+(di.sets===1?" Satz":" Sätze")+" · "+fVol(di.vol)+(kc?" · ca. "+kc+" kcal":""));
   L.push("");
   (ix.by[d]||[]).forEach(function(x){L.push(x[0]+": "+x[1].map(setTxt).join(", "));});
-  if(prs.length){L.push("");prs.forEach(function(p){L.push("Neue Bestleistung: "+p.n+" – "+nf(p.w)+" kg × "+p.r);});}
+  if(prs.length){L.push("");prs.forEach(function(p){L.push("Neue Bestleistung: "+p.n+" – "+wLbl(p.n,p.w,p.r));});}
   return L.join("\n");
 }
 /* ---------- Plan: alle Einheiten ---------- */
@@ -2735,8 +2747,8 @@ function rTrain(){
   return h;
 }
 function prNote(n,i){
-  var cur=bestE(collect(n)),pb=prevBest(n,ui.tdate),on=!!(cur&&pb&&cur.e>pb.e+0.05);
-  return '<div class="prn" data-prn="'+i+'"'+(on?'':' hidden')+'>'+svgI("trophy",16)+'<span>'+(on?'Neue Bestleistung: '+nf(cur.w)+' kg × '+cur.r:'')+'</span></div>';
+  var cur=bestE(collect(n),n,ui.tdate),pb=prevBest(n,ui.tdate),on=!!(cur&&pb&&cur.e>pb.e+0.05);
+  return '<div class="prn" data-prn="'+i+'"'+(on?'':' hidden')+'>'+svgI("trophy",16)+'<span>'+(on?'Neue Bestleistung: '+wLbl(n,cur.w,cur.r):'')+'</span></div>';
 }
 function setIn(i,s,kk,val,ph,lab,dis){
   var v=val==null?"":val,kg=kk===0||kk===3,bad=v!==""&&(kg?numKg(v):numReps(v))===null;
@@ -2795,7 +2807,7 @@ function rowState(i,s){
   row.classList.toggle("done",done);row.querySelector(".no").textContent=done?"✓":String(s+1);
   [0,1,3,4].forEach(function(kk){var el=$("in-"+i+"-"+s+"-"+kk);if(!el)return;var x=v[kk]==null?"":v[kk];el.classList.toggle("bad",x!==""&&(kk===0||kk===3?numKg(x):numReps(x))===null);});
   var p=document.querySelector('[data-prn="'+i+'"]');
-  if(p){var cur=bestE(collect(it.n)),pb=prevBest(it.n,ui.tdate),on=!!(cur&&pb&&cur.e>pb.e+0.05);p.hidden=!on;p.querySelector("span").textContent=on?"Neue Bestleistung: "+nf(cur.w)+" kg × "+cur.r:"";}
+  if(p){var cur=bestE(collect(it.n),it.n,ui.tdate),pb=prevBest(it.n,ui.tdate),on=!!(cur&&pb&&cur.e>pb.e+0.05);p.hidden=!on;p.querySelector("span").textContent=on?"Neue Bestleistung: "+wLbl(it.n,cur.w,cur.r):"";}
 }
 function updDock(){
   if(ui.view!=="t"||$("dock").hidden)return;
@@ -2909,7 +2921,7 @@ function dayHtml(d){
   h+='<div class="tiles4">'+mtile("Dauer",fDur(di.dur))+mtile("Sätze",di.sets)+mtile("Volumen",fVol(di.vol))+mtile("Rekorde",Object.keys(prs).length)+'</div>';
   h+='<div class="dfig">'+(sh.f?'<img src="'+sh.f+'" width="118" height="236" alt="Trainierte Muskeln von vorn"><img src="'+sh.b+'" width="118" height="236" alt="Trainierte Muskeln von hinten">':'')+'<div class="dfl">'+tags(di.groups)+(sh.f?'<p class="m">Hell: Hauptmuskeln. Grau: arbeiten mit.</p>':'')+(kc?'<p class="m">ca. '+kc+' kcal (geschätzt)</p>':'')+'</div></div>';
   h+='<div class="dexl">'+ents.map(function(x){
-    var n=x[0],s=x[1],b=bestE(s),pv=prevOf(n,d),pb=pv?bestE(pv.s):null,dl='',g=mgroup(n);
+    var n=x[0],s=x[1],b=bestE(s,n,d),pv=prevOf(n,d),pb=pv?bestE(pv.s,n,pv.d):null,dl='',g=mgroup(n);
     if(!pv)dl='<span class="dl m">zum ersten Mal</span>';
     else if(b&&pb){var df=b.e-pb.e;dl=Math.abs(df)<.05?'<span class="dl m">wie beim letzten Mal</span>':'<span class="dl '+(df>0?'pos':'neg')+'">'+(df>0?'▲ +':'▼ −')+NF1.format(Math.abs(df))+' kg 1RM</span>';}
     return '<button class="dex" data-a="exst" data-n="'+esc(n)+'"><span class="dexh">'+ic(exInfo(n,n).t)+'<span class="dexn"><b>'+esc(n)+'</b>'+(g?'<small>'+g+'</small>':'')+'</span>'+(prs[n]?'<span class="prb">'+svgI("trophy",12)+'Bestleistung</span>':'')+'</span><span class="dexs">'+setChips(s)+dl+'</span></button>';
