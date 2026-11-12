@@ -830,6 +830,10 @@ button.hc{cursor:pointer}
 .nph input[type=checkbox]{width:20px;min-height:20px}
 .nph.off{opacity:.5}
 .phg{text-align:center;padding:0 4px}
+.nib{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;min-width:0}
+.nml.nsk{padding-block:12px;opacity:.75}.nml.nsk .ch{margin-bottom:4px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.grid4 label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}
+.nsrc{margin-top:10px}.nsrc .rules{font-size:13px;margin-top:8px}
 .barv{position:relative;border-radius:14px;overflow:hidden;background:#000;aspect-ratio:4/3;max-width:100%}
 .barv video{width:100%;height:100%;object-fit:cover;display:block}
 .barl{position:absolute;left:12%;right:12%;top:50%;height:2px;background:var(--neg);box-shadow:0 0 8px var(--neg)}
@@ -2652,7 +2656,8 @@ function cleanItem(x){
 function cleanNuDay(x){
   x=obj(x);var m=[[],[],[],[]],any=false;
   (Array.isArray(x.m)?x.m:[]).slice(0,4).forEach(function(a,i){(Array.isArray(a)?a:[]).forEach(function(it){var c=cleanItem(it);if(c){m[i].push(c);any=true;}});});
-  var w=nNum(x.w,0,10000)||0;return {m:m,w:Math.round(w),u:+x.u||0,any:any||w>0};
+  var w=nNum(x.w,0,10000)||0,o={m:m,w:Math.round(w),u:+x.u||0,any:any||w>0},sk=Array.isArray(x.sk)?x.sk.slice(0,4).map(function(v){return v?1:0;}):null;
+  if(sk&&sk.some(Boolean))o.sk=sk;return o;
 }
 function cleanNuDays(src){var o={};src=obj(src);Object.keys(src).forEach(function(d){if(!DRE.test(d))return;var c=cleanNuDay(src[d]);delete c.any;o[d]=c;});return o;}
 function cleanGoal(x){
@@ -2716,11 +2721,7 @@ function rFood(){
     +'<div class="nbs">'+nBar("Eiweiß",s.p,T.P,"pp")+nBar("Kohlenhydrate",s.c,T.C,"pc")+nBar("Fett",s.f,T.F,"pf")+'</div></section>';
   if(!ro)h+='<div class="nadd">'+(nCam?'<button class="btn pri lg" data-a="nphoto">'+svgI("camera",20)+'Foto</button>':'')+(APP?'<button class="btn lg'+(nCam?'':' pri')+'" data-a="nbar">'+svgI("barcode",20)+'Barcode</button>':'')+'<button class="btn lg'+(nCam||APP?'':' pri')+'" data-a="nopen" data-m="-1">'+svgI("search",19)+'Suchen</button>'+(nAsk?'<button class="btn lg" data-a="ntext">Beschreiben</button>':'')+'</div>'
     +(APP?'<p class="m nhint">Foto-Erkennung vom Teller gibt es nur im Claude-Artefakt. Hier scannst du den Barcode oder suchst.</p>':nCam?'':'<p class="m nhint">Foto-Erkennung gibt es im Artefakt in der Claude-App.</p>');
-  MEALS.forEach(function(mn,mi){
-    var a=day.m[mi],k=0;a.forEach(function(x){k+=x.k;});
-    h+='<section class="card nml"><div class="ch"><h2>'+mn+'</h2><span class="m">'+NF0.format(k)+' / '+NF0.format(Math.round(T.kcal*MSPLIT[mi]/10)*10)+' kcal</span></div>'+(a.length?'<div class="nil">'+a.map(function(x,ii){return nItemRow(x,mi,ii);}).join("")+'</div>':'')
-      +(ro?'':'<div class="btnrow"><button class="lnk" data-a="nopen" data-m="'+mi+'">+ Hinzufügen</button>'+(!a.length&&nPrevMeal(d,mi)?'<button class="lnk" data-a="ncopy" data-m="'+mi+'">Wie gestern</button>':'')+'</div>')+'</section>';
-  });
+  MEALS.forEach(function(mn,mi){h+=nMealCard(T,d,day,mn,mi);});
   var w=day.w||0,gl=Math.max(2000,Math.round(T.w*35/250)*250);
   h+='<section class="card"><div class="ch"><h2>Wasser</h2><span class="m">'+NF1.format(w/1000)+' / '+NF1.format(gl/1000)+' l</span></div><div class="nwt">'
     +Array.apply(null,Array(Math.round(gl/250))).map(function(_,i){return '<button class="nwg'+(i<w/250?' on':'')+'" data-a="nwat" data-v="'+((i+1)*250)+'" aria-label="'+((i+1)*250)+' ml"></button>';}).join("")+'</div></section>';
@@ -2734,23 +2735,32 @@ function nPrevMeal(d,mi){var p=NU.d[add(d,-1)];return p&&p.m[mi].length?p.m[mi]:
 function nWeeks(T){var g=NU.g;if(!g.tw||!g.rate||g.mode==="keep")return null;var diff=g.tw-T.w;if(g.mode==="cut"&&diff>=0||g.mode==="bulk"&&diff<=0)return 0;return Math.ceil(Math.abs(diff)/g.rate);}
 function goalCard(T){
   var g=NU.g,A=nAdapt(),wk=nWeeks(T),h='<section class="card"><div class="ch"><h2>Dein Kalorienbedarf</h2>'+(ro?'':'<button class="lnk" data-a="ngoal">Ändern</button>')+'</div>';
-  h+='<div class="tiles3">'+mtile(g.mode==="cut"?"Cut":g.mode==="bulk"?"Bulk":"Halten",g.mode==="keep"?'±0':(g.mode==="cut"?'−':'+')+NF1.format(g.rate)+'<small> kg/Wo</small>')+mtile("Gewicht",NF1.format(T.w)+'<small> kg</small>')+mtile("Ziel",g.tw?NF1.format(g.tw)+'<small> kg</small>':'–')+'</div>';
+  h+='<div class="tiles3">'+mtile(g.mode==="cut"?"Cut":g.mode==="bulk"?"Bulk":"Halten",g.mode==="keep"?'±0':(g.mode==="cut"?'−':'+')+nf(g.rate)+'<small> kg/Wo</small>')+mtile("Gewicht",NF1.format(T.w)+'<small> kg</small>')+mtile("Ziel",g.tw?NF1.format(g.tw)+'<small> kg</small>':'–')+'</div>';
   if(wk!=null)h+='<p class="m nline">'+(wk===0?'Zielgewicht erreicht. Stell auf „Halten“ um oder setz ein neues Ziel.':'Bei diesem Tempo erreichst du '+NF1.format(g.tw)+' kg in etwa '+wk+(wk===1?' Woche':' Wochen')+' (um den '+fmt(add(today(),wk*7))+').')+'</p>';
   h+='<div class="rl ncalc"><div class="rrow"><span>Grundumsatz<br><small class="m">was dein Körper in Ruhe verbraucht</small></span><span class="rv">'+NF0.format(T.bmr)+' kcal</span></div><div class="rrow"><span>+ Alltag und Training<br><small class="m">Faktor '+String(g.pal).replace(".",",")+'</small></span><span class="rv">'+NF0.format(T.tdee-T.bmr)+' kcal</span></div><div class="rrow" style="display:none"><span><span class="rv">'+NF0.format(T.bmr)+' kcal</span></div><div class="rrow"><span><b>= Gesamtbedarf</b> '+(g.adj?'(aus deinen Daten)':'(Erhalt)')+'</span><span class="rv">'+NF0.format(T.tdee)+' kcal</span></div><div class="rrow"><span>'+(g.mode==="cut"?'− Defizit für den Cut':g.mode==="bulk"?'+ Überschuss für den Bulk':'± 0 zum Halten')+'</span><span class="rv">'+(T.delta>0?'+':T.delta<0?'−':'±')+NF0.format(Math.abs(T.delta))+' kcal</span></div><div class="rrow"><span><b>= Du darfst pro Tag essen</b></span><span class="rv"><b>'+NF0.format(T.kcal)+' kcal</b></span></div><div class="rrow"><span>davon Eiweiß · Kohlenhydrate · Fett</span><span class="rv">'+T.P+' · '+T.C+' · '+T.F+' g</span></div></div>';
   if(T.floored)h+='<p class="m nline">Das Ziel ist auf dein Minimum angehoben, damit du nicht zu wenig isst. Wähle ein langsameres Tempo.</p>';
   if(A.ok&&!ro&&Math.abs(A.est-T.tdee)>=100)h+='<div class="banner nadapt">Laut deinem Essen und Gewicht der letzten 3 Wochen liegt dein echter Bedarf bei etwa <b>'+NF0.format(A.est)+' kcal</b> (Ø '+NF0.format(A.avg)+' kcal gegessen, Gewicht '+(A.wk>0?'+':A.wk<0?'−':'±')+NF1.format(Math.abs(A.wk))+' kg pro Woche).<div class="btnrow" style="margin-top:8px"><button class="btn sm pri" data-a="nadapt" data-v="'+A.est+'">Übernehmen</button></div></div>';
   else if(!A.ok)h+='<p class="m nline">Trag 2–3 Wochen dein Essen und mehrmals dein Gewicht ein. Dann berechne ich deinen echten Bedarf aus deinen Daten (bisher '+A.days+' Tage, '+A.pts+' Wiegungen).</p>';
   if(g.adj&&!ro)h+='<button class="lnk" data-a="nadapt" data-v="0">Wieder mit der Formel rechnen</button>';
+  h+='<details class="nman nsrc"><summary>So wird gerechnet (Quellen)</summary><ul class="rules">'+
+    '<li><b>Grundumsatz</b> nach Mifflin-St Jeor (Mifflin et al., Am J Clin Nutr 1990). Laut Frankenfield et al. (J Am Diet Assoc 2005) die genaueste Formel: bei etwa 80 % der Menschen auf ±10 % genau.</li>'+
+    '<li><b>Alltag und Training</b> über den Aktivitätsfaktor (PAL) 1,375 / 1,55 / 1,725. Die DGE nennt für Erwachsene PAL-Werte von 1,4 bis 1,9.</li>'+
+    '<li><b>Defizit und Überschuss:</b> 1 kg Körperfett entspricht etwa 7.700 kcal. Der Körper passt sich aber an, und anfangs schwankt Wasser (Hall, Int J Obes 2008). Deshalb rechnet die App nach 2–3 Wochen mit deinem gemessenen Bedarf.</li>'+
+    '<li><b>Tempo:</b> Im Cut 0,5–1 % des Körpergewichts pro Woche, damit Muskeln erhalten bleiben (Helms et al., J Int Soc Sports Nutr 2014). Im Lean Bulk 0,25–0,5 % pro Woche (Iraki et al., Sports 2019).</li>'+
+    '<li><b>Eiweiß</b> 1,6–2,2 g pro kg (Morton et al., Br J Sports Med 2018), im Cut am oberen Ende: hier 2,2 g/kg, sonst 1,8 g/kg. <b>Fett</b> mindestens 0,8 g/kg bzw. 25 % der kcal, der Rest Kohlenhydrate.</li>'+
+    '<li>Das Tagesziel fällt nie unter deinen Grundumsatz.</li></ul></details>';
   return h+'</section>';
 }
 function goalForm(first){
   var g=NU.g||{sex:"m",age:"",h:"",pal:1.55,mode:"cut",rate:.5,tw:""},w=nWeight(),f=ui.ngf||(ui.ngf={mode:g.mode,sex:g.sex,pal:g.pal,rate:g.rate});
-  var rates=f.mode==="cut"?[[.25,"langsam"],[.5,"mittel"],[.75,"schnell"]]:f.mode==="bulk"?[[.1,"sauber"],[.25,"mittel"],[.4,"schnell"]]:[];
+  /* Tempo in % des Körpergewichts pro Woche: Cut 0,5–1 % (Helms 2014), Lean Bulk 0,25–0,5 % (Iraki 2019) */
+  var bw0=w||80,rk=function(p){return Math.max(.05,Math.round(bw0*p/100/.05)*5/100);};
+  var rates=f.mode==="cut"?[[rk(.5),"langsam · 0,5 %"],[rk(.75),"mittel · 0,75 %"],[rk(1),"schnell · 1 %"]]:f.mode==="bulk"?[[rk(.25),"sauber · 0,25 %"],[rk(.4),"mittel · 0,4 %"],[rk(.5),"schnell · 0,5 %"]]:[];
   if(rates.length&&!rates.some(function(r){return r[0]===f.rate;}))f.rate=rates[1][0];
   var h='<section class="card ngf"><div class="ch"><h2>'+(first?'Ernährungsziel festlegen':'Ziel ändern')+'</h2></div>'
     +(first?'<p class="m" style="margin:-4px 0 12px;font-size:14px">Damit rechne ich deinen Kalorienbedarf und deine Makros aus.</p>':'')
     +'<p class="lbl">Ziel</p><div class="seg sm" role="group" aria-label="Ziel">'+[["cut","Cut"],["keep","Halten"],["bulk","Bulk"]].map(function(x){return '<button data-a="ngf" data-k="mode" data-v="'+x[0]+'" aria-pressed="'+(f.mode===x[0])+'">'+x[1]+'</button>';}).join("")+'</div>'
-    +(rates.length?'<p class="lbl">Tempo pro Woche</p><div class="seg sm two" role="group" aria-label="Tempo">'+rates.map(function(r){return '<button data-a="ngf" data-k="rate" data-v="'+r[0]+'" aria-pressed="'+(f.rate===r[0])+'">'+NF1.format(r[0])+' kg<small>'+r[1]+'</small></button>';}).join("")+'</div>':'')
+    +(rates.length?'<p class="lbl">Tempo pro Woche</p><div class="seg sm two" role="group" aria-label="Tempo">'+rates.map(function(r){return '<button data-a="ngf" data-k="rate" data-v="'+r[0]+'" aria-pressed="'+(f.rate===r[0])+'">'+nf(r[0])+' kg<small>'+r[1]+'</small></button>';}).join("")+'</div>':'')
     +'<p class="lbl">Geschlecht</p><div class="seg sm" role="group" aria-label="Geschlecht"><button data-a="ngf" data-k="sex" data-v="m" aria-pressed="'+(f.sex==="m")+'">Mann</button><button data-a="ngf" data-k="sex" data-v="f" aria-pressed="'+(f.sex==="f")+'">Frau</button></div>'
     +'<div class="grid3"><label for="ng-age">Alter<input id="ng-age" inputmode="numeric" value="'+esc(g.age||"")+'" placeholder="Jahre"></label><label for="ng-h">Größe<input id="ng-h" inputmode="numeric" value="'+esc(g.h||"")+'" placeholder="cm"></label><label for="ng-w">Gewicht<input id="ng-w" inputmode="decimal" value="'+(w?nf(w):'')+'" placeholder="kg"></label></div>'
     +(f.mode==="keep"?'':'<label class="ngl" for="ng-tw">Zielgewicht (optional)<input id="ng-tw" inputmode="decimal" value="'+(g.tw?nf(g.tw):'')+'" placeholder="kg"></label>')
@@ -2812,6 +2822,14 @@ var NLABEL='Auf dem Foto ist eine Verpackung bzw. ihre Nährwerttabelle. Lies di
   +'Wenn nur kJ angegeben sind, rechne kcal = kJ / 4,184. Lies auch den Produktnamen (mit Marke) und, falls angegeben, die Portionsgröße in g. '
   +'Antworte nur mit JSON: {"name":"Marke Produkt","kcal":0,"protein":0,"carbs":0,"fat":0,"portion":0,"readable":true,"note":"kurzer Hinweis auf Deutsch"}. '
   +'Wenn die Tabelle nicht lesbar ist, setze "readable":false und erkläre es in note.';
+var NAUTO='Erkenne zuerst, was das Foto zeigt. Zeigt es hauptsächlich eine Nährwerttabelle oder die Rückseite einer Verpackung mit Nährwerten, dann antworte nur mit {"type":"label","label":{"name":"Marke Produkt","kcal":0,"protein":0,"carbs":0,"fat":0,"portion":0,"readable":true,"note":""}} mit den exakt abgelesenen Werten pro 100 g. Sonst antworte im folgenden Format mit "type":"food". '+NPROMPT.replace('{"items"','{"type":"food","items"');
+function nLabelDone(r){
+  var k=+(r&&r.kcal);
+  if(!r||r.readable===false||!(k>=0&&k<=950)){ui.ph.st="err";ui.ph.msg="Die Nährwerttabelle war nicht lesbar. "+(r&&r.note?String(r.note).slice(0,200):"Fotografiere sie gerade und scharf.");if(ui.sheet==="photo")renderSheet();return;}
+  var n=clean(r.name)||"Produkt",pg=nNum(r.portion,1,2000)||100;
+  NU.f[n]=[k,+r.protein||0,+r.carbs||0,+r.fat||0,pg];nuSetDirty=true;bump();persist();
+  ui.nf={m:ui.ph.m,q:"",sel:{n:n,k:k,p:+r.protein||0,c:+r.carbs||0,f:+r.fat||0,pg:pg,pl:"Portion",src:"own"},g:pg};ui.sheet="food";renderSheet();toast("Nährwerte abgelesen und gespeichert");
+}
 function nAnalyze(file,text,mode){
   if(!nSample)return;
   if(nCtl)nCtl.abort();nCtl=new AbortController();
@@ -2829,7 +2847,8 @@ function nAnalyze(file,text,mode){
     },nFail);
     return;
   }
-  nSample.json(NPROMPT+(text?"\n\nHinweis vom Nutzer (hat Vorrang vor dem Foto): "+text.slice(0,500):""),opt).then(function(r){
+  nSample.json((mode==="auto"?NAUTO:NPROMPT)+(text?"\n\nHinweis vom Nutzer (hat Vorrang vor dem Foto): "+text.slice(0,500):""),opt).then(function(r){
+    if(r&&r.type==="label"&&r.label){nLabelDone(r.label);return;}
     var it=(r&&Array.isArray(r.items)?r.items:[]).map(function(x){var g=+x.grams||0;return {n:clean(x.name)||"Essen",g:g,g0:g||100,k0:+x.kcal||0,p0:+x.protein||0,c0:+x.carbs||0,f0:+x.fat||0,u:x.sure==="niedrig",on:true};}).filter(function(x){return x.k0>0;});
     /* Plausibilität: kcal müssen ungefähr zu den Makros passen (4/4/9), sonst aus den Makros neu rechnen */
     it.forEach(function(x){var m=x.p0*4+x.c0*4+x.f0*9;if(m>20&&Math.abs(m-x.k0)/m>.25)x.k0=Math.round(m);});
@@ -2855,6 +2874,7 @@ function photoHtml(){
   var tot=0;p.items.forEach(function(x){if(x.on)tot+=nScale(x).k;});
   h+='<p class="m" style="margin:0">Prüfe die Mengen. Ändern rechnet die Werte automatisch um.</p><div class="nil">'+p.items.map(function(x,i){var s=nScale(x);return '<div class="nit nph'+(x.on?'':' off')+'"><input type="checkbox" id="ph-on-'+i+'" data-ph="'+i+'" aria-label="'+esc(x.n)+' übernehmen"'+(x.on?' checked':'')+'><span class="nin"><b>'+esc(x.n)+(x.u?' <span class="pill warn">unsicher</span>':'')+'</b><small>E '+NF0.format(s.p)+' · K '+NF0.format(s.c)+' · F '+NF0.format(s.f)+'</small></span><label class="vh" for="ph-g-'+i+'">Gramm</label><input class="phg" id="ph-g-'+i+'" data-phg="'+i+'" inputmode="numeric" value="'+Math.round(x.g||x.g0)+'"><span class="nik">'+NF0.format(s.k)+'</span></div>';}).join("")+'</div>';
   if(p.note)h+='<p class="m" style="margin:0;font-size:13px">'+esc(p.note)+'</p>';
+  if(p.file)h+='<details class="nman"><summary>Stimmt nicht? Hinweis geben und neu schätzen</summary><div class="panel"><label class="vh" for="ph-hint">Hinweis</label><input id="ph-hint" maxlength="200" autocomplete="off" placeholder="z. B. 250 g Nudeln mit Pesto, kein Käse"><button class="btn" data-a="phgo">Neu schätzen</button></div></details>';
   h+='<div class="seg sm" role="group" aria-label="Mahlzeit">'+MEALS.map(function(m,i){return '<button data-a="phm" data-v="'+i+'" aria-pressed="'+(p.m===i)+'">'+m.replace("essen","")+'</button>';}).join("")+'</div>';
   return h+'<button class="btn pri wide lg" data-a="phadd">'+NF0.format(tot)+' kcal übernehmen</button><p class="m" style="margin:0;font-size:12px">Schätzung von Claude. Gramm prüfen lohnt sich, sie machen den größten Unterschied.</p>';
 }
@@ -2951,7 +2971,7 @@ document.addEventListener("click",function(ev){
   else if(a==="barphoto"){var bi=$("bimg");if(bi){bi.value="";bi.click();}}
   else if(a==="barok"){barStop();barLookup(($("bar-in")||{}).value);}
   else if(a==="phmode"){var hi=$("ph-hint");if(hi)ui.ph.txt=hi.value;ui.ph.mode=t.getAttribute("data-v");renderSheet();}
-  else if(a==="phgo"||a==="phretry"){var hi2=$("ph-hint");nAnalyze(ui.ph.file,hi2?hi2.value.trim():ui.ph.txt,ui.ph.mode);}
+  else if(a==="phgo"||a==="phretry"){var hi2=$("ph-hint");nAnalyze(ui.ph.file,hi2?hi2.value.trim():ui.ph.txt,ui.ph.mode==="label"?"label":"auto");}
   else if(a==="ntext"){openSheet("ntext");var ta=$("nt-in");if(ta)ta.focus();}
   else if(a==="ntgo"){var tx=String(($("nt-in")||{}).value||"").trim();if(tx.length<3){toast("Bitte kurz beschreiben, was du gegessen hast");return;}nAnalyze(null,tx);}
   else if(a==="nstop"){if(nCtl)nCtl.abort();ui.sheet=null;render();}
@@ -2968,10 +2988,65 @@ document.addEventListener("input",function(ev){
 });
 document.addEventListener("change",function(ev){
   var t=ev.target;
-  if(t.id==="nimg"){var f=t.files&&t.files[0];if(f){ui.ph={st:"ready",file:f,img:URL.createObjectURL(f),mode:"food",m:nDefMeal(),txt:"",items:[]};openSheet("photo");}}
+  if(t.id==="nimg"){var f=t.files&&t.files[0];if(f){ui.ph={m:nDefMeal()};nAnalyze(f,"","auto");}}
   else if(t.id==="bimg"){var bf=t.files&&t.files[0];if(bf){barStop();barFromImage(bf);}}
   else if(t.getAttribute&&t.getAttribute("data-ph")!==null){ui.ph.items[+t.getAttribute("data-ph")].on=t.checked;renderSheet();}
   else if(t.getAttribute&&t.getAttribute("data-phg")!==null){var x=ui.ph.items[+t.getAttribute("data-phg")],g=nNum(num(t.value),1,5000);if(x&&g){x.g=g;}renderSheet();}
+});
+/* ---------- Ernährung: Einträge bearbeiten, Extras, Mahlzeiten überspringen ---------- */
+/* Häufige Extras: [Name, Menge, Einheit, kcal, Eiweiß, KH, Fett pro 100 g/ml] */
+var NEX=[["Milch 1,5 %",150,"ml",47,3.4,4.9,1.5],["Vollmilch 3,5 %",150,"ml",64,3.3,4.8,3.5],["Haferdrink",150,"ml",45,0.5,6.5,1.5],["Zucker",5,"g",400,0,100,0],["Honig",10,"g",304,0.3,82,0],
+  ["Butter",10,"g",741,0.7,0.6,83],["Olivenöl",10,"g",884,0,0,100],["Erdnussbutter",15,"g",600,25,16,50],["Banane",120,"g",89,1.1,23,0.3],["Beeren",80,"g",50,0.8,12,0.3],
+  ["Käse gerieben",30,"g",380,27,0,30],["Ketchup",20,"g",100,1.2,23,0.2],["Mayonnaise",15,"g",680,1,1,75],["Rahmsoße",60,"g",120,2,5,10],["Whey-Protein",30,"g",380,75,8,6]];
+function nItemEditRow(it,mi,ii){
+  return '<div class="nit"><button class="nin nib" data-a="nedit" data-m="'+mi+'" data-i="'+ii+'"><b>'+esc(it.n)+'</b><small>'+(it.g?NF0.format(it.g)+' g · ':'')+'E '+NF0.format(it.p)+' · K '+NF0.format(it.c)+' · F '+NF0.format(it.f)+(it.s==="foto"?' · Foto':'')+'</small></button><span class="nik">'+NF0.format(it.k)+'</span>'
+    +(ro?'':'<button class="x" data-a="ndel" data-m="'+mi+'" data-i="'+ii+'" aria-label="'+esc(it.n)+' löschen">✕</button>')+'</div>';
+}
+/* Richtwert je Mahlzeit: übersprungene Mahlzeiten geben ihren Anteil an die anderen ab */
+function nMealTarget(T,day,mi){var s=0;MSPLIT.forEach(function(p,i){if(!(day.sk&&day.sk[i]))s+=p;});return s?Math.round(T.kcal*MSPLIT[mi]/s/10)*10:0;}
+function nMealCard(T,d,day,mn,mi){
+  var a=day.m[mi],k=0,sk=!!(day.sk&&day.sk[mi]);a.forEach(function(x){k+=x.k;});
+  if(sk&&!a.length)return '<section class="card nml nsk"><div class="ch"><h2>'+mn+'</h2><span class="m">übersprungen</span></div>'+(ro?'':'<button class="lnk" data-a="nskip" data-m="'+mi+'">Doch essen</button>')+'</section>';
+  return '<section class="card nml"><div class="ch"><h2>'+mn+'</h2><span class="m">'+NF0.format(k)+' / '+NF0.format(nMealTarget(T,day,mi))+' kcal</span></div>'+(a.length?'<div class="nil">'+a.map(function(x,ii){return nItemEditRow(x,mi,ii);}).join("")+'</div>':'')
+    +(ro?'':'<div class="btnrow"><button class="lnk" data-a="nopen" data-m="'+mi+'">+ Hinzufügen</button>'+(!a.length&&nPrevMeal(d,mi)?'<button class="lnk" data-a="ncopy" data-m="'+mi+'">Wie gestern</button>':'')+(!a.length?'<button class="lnk m" data-a="nskip" data-m="'+mi+'">Überspringen</button>':'')+'</div>')+'</section>';
+}
+function neditHtml(){
+  var e=ui.ne,day=NU.d[ui.nd||today()],it=day&&day.m[e.m][e.i];
+  if(!it)return '<div class="sh"><h2 id="sheet-t">Eintrag</h2><button class="btn sm ghost" data-a="shut">Schließen</button></div><p class="m">Dieser Eintrag existiert nicht mehr.</p>';
+  return '<div class="sh"><h2 id="sheet-t">Eintrag anpassen</h2><button class="btn sm ghost" data-a="shut">Schließen</button></div>'
+    +'<label class="lbl" for="ne-n">Name</label><input id="ne-n" maxlength="60" value="'+esc(it.n)+'">'
+    +(it.g?'<label class="lbl" for="ne-g">Menge in g</label><div class="inl"><input id="ne-g" inputmode="decimal" value="'+Math.round(it.g)+'"></div><div class="chips">'+[.5,1.5,2].map(function(f){return '<button class="chip" data-a="negx" data-v="'+f+'">'+(f===.5?'halbe':NF1.format(f)+' ×')+' Menge</button>';}).join("")+'</div>':'')
+    +'<div class="grid4"><label for="ne-k">kcal<input id="ne-k" inputmode="decimal" value="'+Math.round(it.k)+'"></label><label for="ne-p">Eiweiß<input id="ne-p" inputmode="decimal" value="'+nf(Math.round(it.p*10)/10)+'"></label><label for="ne-c">KH<input id="ne-c" inputmode="decimal" value="'+nf(Math.round(it.c*10)/10)+'"></label><label for="ne-f">Fett<input id="ne-f" inputmode="decimal" value="'+nf(Math.round(it.f*10)/10)+'"></label></div>'
+    +'<p class="m" style="margin:0;font-size:12.5px">Ändern der Menge rechnet kcal und Makros automatisch um.</p>'
+    +'<p class="lbl">Dazu (wird als eigener Eintrag ergänzt)</p><div class="chips">'+NEX.map(function(x,i){return '<button class="chip" data-a="nex" data-v="'+i+'">+ '+esc(x[0])+' '+x[1]+' '+x[2]+'</button>';}).join("")+'</div>'
+    +'<div class="btn2"><button class="btn danger" data-a="nedel">Löschen</button><button class="btn pri" data-a="nesave">Speichern</button></div>';
+}
+var neBase=null;
+document.addEventListener("click",function(ev){
+  var t=ev.target.closest?ev.target.closest("[data-a]"):null;if(!t||t.disabled||ro)return;var a=t.getAttribute("data-a"),d=ui.nd||today(),day=NU.d[d];
+  if(a==="nedit"){ui.ne={m:+t.getAttribute("data-m"),i:+t.getAttribute("data-i")};var it=NU.d[d].m[ui.ne.m][ui.ne.i];neBase=it?{g:it.g,k:it.k,p:it.p,c:it.c,f:it.f}:null;openSheet("nedit");}
+  else if(a==="negx"){var gi=$("ne-g");if(gi&&neBase){gi.value=Math.round(neBase.g*+t.getAttribute("data-v"));gi.dispatchEvent(new Event("input",{bubbles:true}));}}
+  else if(a==="nex"&&ui.ne){
+    var x=NEX[+t.getAttribute("data-v")],q=x[1]/100;if(!day)return;
+    day.m[ui.ne.m].splice(ui.ne.i+1,0,{n:"+ "+x[0],g:x[1],k:Math.round(x[3]*q),p:Math.round(x[4]*q*10)/10,c:Math.round(x[5]*q*10)/10,f:Math.round(x[6]*q*10)/10,s:"db"});
+    nSave(d);render();toast(x[0]+" ergänzt");
+  }
+  else if(a==="nesave"&&ui.ne){
+    var it2=day&&day.m[ui.ne.m][ui.ne.i];if(!it2)return;
+    var nm=clean(($("ne-n")||{}).value),kk=nNum(num(($("ne-k")||{}).value),0,20000);if(!nm||kk===null){toast("Bitte Name und kcal prüfen");return;}
+    it2.n=nm;it2.k=Math.round(kk);it2.p=num(($("ne-p")||{}).value)||0;it2.c=num(($("ne-c")||{}).value)||0;it2.f=num(($("ne-f")||{}).value)||0;
+    var gg=$("ne-g")?nNum(num($("ne-g").value),1,10000):null;if(gg)it2.g=Math.round(gg);
+    ui.sheet=null;nSave(d);render();toast("Gespeichert");
+  }
+  else if(a==="nedel"&&ui.ne){if(!day)return;var rm2=day.m[ui.ne.m].splice(ui.ne.i,1)[0];ui.sheet=null;nSave(d);render();if(rm2)toast(rm2.n+" gelöscht");}
+  else if(a==="nskip"){
+    var mi=+t.getAttribute("data-m"),dd=NU.d[d]||(NU.d[d]={m:[[],[],[],[]],w:0,u:0});dd.sk=dd.sk||[0,0,0,0];dd.sk[mi]=dd.sk[mi]?0:1;nSave(d);render();
+    toast(dd.sk[mi]?MEALS[mi]+" übersprungen. Die Kalorien verteilen sich auf die anderen Mahlzeiten.":MEALS[mi]+" wieder aktiv");
+  }
+});
+document.addEventListener("input",function(ev){
+  var t=ev.target;if(t.id!=="ne-g"||!neBase||!neBase.g)return;var g=num(t.value);if(!(g>0))return;var f=g/neBase.g;
+  [["ne-k",neBase.k,0],["ne-p",neBase.p,1],["ne-c",neBase.c,1],["ne-f",neBase.f,1]].forEach(function(x){var el=$(x[0]);if(el)el.value=x[2]?nf(Math.round(x[1]*f*10)/10):Math.round(x[1]*f);});
 });
 /* ---------- Einheiten löschen, wiederherstellen und neu anlegen ---------- */
 var udelT=null;
@@ -3350,7 +3425,7 @@ function renderSheet(){
   /* Beim Schließen gleitet das Blatt erst nach unten weg, dann wird es geleert */
   if(!open&&!el.hidden&&!RMQ){el.classList.add("out");shT=setTimeout(function(){el.hidden=true;el.classList.remove("out");$("sheet-in").innerHTML="";},210);return;}
   el.classList.remove("out");el.hidden=!open;
-  $("sheet-in").innerHTML=open?(ui.sheet==="sum"?sumHtml():ui.sheet==="meas"?measHtml():ui.sheet==="ex"?exHtml(ui.exN):ui.sheet==="day"?dayHtml(ui.dayD):ui.sheet==="cfg"?cfgHtml():ui.sheet==="food"?foodHtml():ui.sheet==="photo"?photoHtml():ui.sheet==="ntext"?textHtml():ui.sheet==="bar"?barHtml():setHtml()):"";
+  $("sheet-in").innerHTML=open?(ui.sheet==="sum"?sumHtml():ui.sheet==="meas"?measHtml():ui.sheet==="ex"?exHtml(ui.exN):ui.sheet==="day"?dayHtml(ui.dayD):ui.sheet==="cfg"?cfgHtml():ui.sheet==="food"?foodHtml():ui.sheet==="photo"?photoHtml():ui.sheet==="ntext"?textHtml():ui.sheet==="bar"?barHtml():ui.sheet==="nedit"?neditHtml():setHtml()):"";
 }
 function setHtml(){
   var ne=0;Object.keys(log).forEach(function(n){ne+=log[n].length;});
