@@ -830,6 +830,7 @@ button.hc{cursor:pointer}
 .nph input[type=checkbox]{width:20px;min-height:20px}
 .nph.off{opacity:.5}
 .phg{text-align:center;padding:0 4px}
+.nfmore{margin:10px 0 4px;align-items:center;gap:8px;font-size:13px}.spin.sm{width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle}
 .nib{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;min-width:0}
 .nml.nsk{padding-block:12px;opacity:.75}.nml.nsk .ch{margin-bottom:4px}
 .grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.grid4 label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}
@@ -2646,6 +2647,37 @@ var FDB=[["Haferflocken",370,13.5,59,7,50,"Portion"],["Müsli",370,9,65,7,60,"Po
 ["Spaghetti Bolognese",145,7,18,5,400,"Teller"],["Vollmilchschokolade",535,7.7,59,30,25,"Riegel"],["Gummibärchen",343,6.9,77,0.2,50,"Portion"],["Chips",536,6.5,53,34,50,"Portion"],
 ["Vanilleeis",207,3.5,24,11,100,"Portion"],["Cola",42,0,10.6,0,330,"Dose"],["Cola Zero",0.3,0,0,0,330,"Dose"],["Orangensaft",45,0.7,10,0.2,250,"Glas"],
 ["Bier",43,0.5,3.6,0,500,"Flasche"],["Cappuccino",30,1.7,2.5,1.5,200,"Tasse"]];
+/* Große Liste: Name|kcal|Eiweiß|KH|Fett pro 100 g|Portion g|Portion (Werte gerundet nach BLS/USDA) */
+var FDB2=("Blumenkohl|25|1.9|3|0.3|200|Portion;Blumenkohl gekocht|23|1.8|2.7|0.3|200|Portion;Brokkoli gekocht|35|2.4|4.5|0.4|200|Portion;Rosenkohl|43|3.4|5.4|0.3|150|Portion;Grünkohl|49|4.3|5|0.9|200|Portion;Weißkohl|25|1.3|4.2|0.1|150|Portion;Rotkohl|31|1.4|5.5|0.2|150|Portion;Sauerkraut|19|0.9|3.1|0.1|150|Portion;Spinat|23|2.9|1.1|0.4|150|Portion;Rahmspinat|70|3|4|5|200|Portion;Zucchini|17|1.2|2.2|0.3|200|Stück;Aubergine|25|1|3|0.2|200|Stück;Paprika rot|31|1|5|0.3|150|Stück;Paprika grün|20|0.9|3|0.2|150|Stück;Karotte|41|0.9|8|0.2|80|Stück;Erbsen|81|5.4|11|0.4|150|Portion;Mais (Dose)|86|3.3|16|1.2|140|Dose;Grüne Bohnen|31|1.8|5|0.2|150|Portion;Champignons|22|3.1|0.6|0.3|100|Portion;Zwiebel|40|1.1|8|0.1|80|Stück;Knoblauch|149|6.4|29|0.5|5|Zehe;Lauch|31|1.5|5|0.3|100|Stück;Sellerie|16|0.7|2|0.2|100|Portion;Spargel|20|2.2|2|0.1|200|Portion;Kürbis|26|1|6|0.1|200|Portion;Rote Bete|43|1.6|8|0.2|100|Portion;Radieschen|16|0.7|2|0.1|50|Portion;Kohlrabi|27|1.7|3.7|0.1|150|Stück;Rucola|25|2.6|2|0.7|40|Portion;Eisbergsalat|14|0.9|2|0.1|80|Portion;Feldsalat|21|1.8|1.5|0.4|50|Portion;Cherrytomaten|18|0.9|3.9|0.2|100|Portion;Oliven|145|1|1|15|30|Portion;Gewürzgurken|20|0.5|3.5|0.2|50|Stück;Edamame|121|12|9|5|100|Portion;"
++"Orange|47|0.9|12|0.1|180|Stück;Mandarine|53|0.8|13|0.3|80|Stück;Birne|57|0.4|15|0.1|170|Stück;Pfirsich|39|0.9|10|0.3|150|Stück;Nektarine|44|1.1|11|0.3|150|Stück;Pflaume|46|0.7|11|0.3|40|Stück;Kirschen|63|1.1|16|0.2|100|Portion;Weintrauben|69|0.7|18|0.2|100|Portion;Erdbeeren|32|0.7|8|0.3|150|Portion;Himbeeren|52|1.2|12|0.7|125|Schale;Heidelbeeren|57|0.7|14|0.3|125|Schale;Ananas|50|0.5|13|0.1|150|Portion;Mango|60|0.8|15|0.4|150|Portion;Kiwi|61|1.1|15|0.5|75|Stück;Wassermelone|30|0.6|8|0.2|300|Stück;Honigmelone|36|0.5|9|0.1|200|Stück;Grapefruit|42|0.8|11|0.1|250|halbe;Zitrone|29|1.1|9|0.3|60|Stück;Datteln getrocknet|282|2.5|75|0.4|30|Portion;Rosinen|299|3.1|79|0.5|30|Portion;Apfelmus|68|0.2|17|0.1|100|Portion;Smoothie|55|0.6|12|0.3|250|Flasche;"
++"Hähnchenschenkel|185|18|0|12|200|Stück;Chicken Nuggets|296|15|17|19|120|Portion;Chicken Wings|254|23|0|17|150|Portion;Hähnchen-Döner|190|14|19|7|350|Stück;Putenhack|149|19|0|8|125|Portion;Schweinefilet|120|22|0|3.5|150|Stück;Schweineschnitzel natur|130|22|0|4.5|150|Stück;Schweinebraten|210|26|0|11|150|Portion;Kotelett|220|25|0|13|180|Stück;Hackfleisch gemischt|260|17|0|21|125|Portion;Frikadelle|240|15|8|16|100|Stück;Hackbraten|220|15|7|15|150|Portion;Gulasch|140|16|4|7|250|Portion;Rindersteak (Hüfte)|130|24|0|4|200|Stück;Roastbeef|150|23|0|6|50|Portion;Lammkotelett|280|23|0|21|150|Portion;Leberkäse|300|12|1|28|120|Scheibe;Wiener Würstchen|280|13|1|25|50|Stück;Currywurst|250|10|10|19|150|Stück;Salami|390|22|1|33|30|Portion;Kochschinken|110|19|1|3.5|30|Portion;Putenbrust-Aufschnitt|105|21|1|1.5|30|Portion;Speck|400|15|1|38|30|Portion;Leberwurst|330|14|1|30|25|Portion;Kassler|150|21|1|7|150|Portion;"
++"Garnelen|99|24|0.2|0.3|100|Portion;Kabeljau|82|18|0|0.7|150|Filet;Seelachs|90|19|0|1|150|Filet;Forelle|119|20|0|4|150|Filet;Thunfischsteak|130|28|0|1|150|Stück;Fischstäbchen|200|13|17|9|120|Portion;Matjes|250|16|0|21|100|Portion;Räucherlachs|160|21|0|8|50|Portion;Sushi (Maki)|145|5|28|1.5|200|Portion;"
++"Frischkäse|250|5|4|24|30|Portion;Frischkäse leicht|130|9|4|9|30|Portion;Feta|265|14|4|21|50|Portion;Halloumi|320|21|2|25|100|Portion;Parmesan|390|35|0|28|10|Portion;Camembert|300|20|0|24|30|Portion;Emmentaler|380|28|0|30|30|Scheibe;Sahne|300|2.4|3|31|30|Portion;Saure Sahne|190|2.8|3.5|18|30|Portion;Schmand|240|2.5|3|24|30|Portion;Fruchtjoghurt|95|3.5|14|2.8|150|Becher;Pudding|105|3.5|17|2.5|125|Becher;Kakao|80|3.4|11|2.5|250|Glas;Proteinpudding|72|10|6|1.5|200|Becher;Proteinjoghurt|60|10|4|0.2|200|Becher;Buttermilch|38|3.4|4|0.5|250|Glas;Kefir|55|3.4|4|3|250|Glas;Hafermilch|45|0.5|6.5|1.5|250|Glas;Sojamilch|39|3.3|1|2|250|Glas;Mandelmilch|20|0.5|0.6|1.6|250|Glas;Rührei|150|10|1.5|11|120|Portion;Spiegelei|190|13|0.8|15|60|Stück;Omelett|155|10|1|12|150|Portion;"
++"Basmatireis gekocht|130|2.7|28|0.3|200|Portion;Vollkornreis gekocht|120|2.6|25|0.9|200|Portion;Vollkornnudeln gekocht|140|5.5|27|1|250|Portion;Gnocchi|150|3.5|32|0.5|200|Portion;Spätzle|180|6|30|3|200|Portion;Couscous gekocht|112|3.8|23|0.2|200|Portion;Bulgur gekocht|83|3.1|19|0.2|200|Portion;Quinoa gekocht|120|4.4|21|1.9|200|Portion;Kartoffelpüree|90|2|13|3.5|200|Portion;Bratkartoffeln|150|2.5|20|7|200|Portion;Ofenkartoffel|93|2.5|21|0.1|250|Stück;Kroketten|200|3|24|10|150|Portion;Rösti|190|2.5|22|10|150|Portion;Wedges|160|2.5|22|7|150|Portion;Süßkartoffel-Pommes|240|2|30|12|150|Portion;Kichererbsen (Dose)|120|7|17|2.5|120|Portion;Kidneybohnen (Dose)|100|7|14|0.5|120|Portion;Weiße Bohnen (Dose)|90|6.5|13|0.5|120|Portion;Hummus|170|8|14|10|50|Portion;Falafel|330|13|32|18|100|Portion;"
++"Weizenbrot|250|8|48|2|50|Scheibe;Roggenbrot|210|6|42|1.2|50|Scheibe;Dinkelbrot|240|9|44|2.5|50|Scheibe;Laugenbrezel|280|8|56|2|80|Stück;Vollkornbrötchen|240|9|42|3|65|Stück;Baguette|260|8.5|52|1.5|80|Portion;Knäckebrot|330|10|62|2|10|Scheibe;Reiswaffel|380|8|80|3|8|Stück;Pfannkuchen|200|7|28|7|100|Stück;Waffel|300|6|38|14|60|Stück;Bagel|250|10|48|1.5|90|Stück;Toast Vollkorn|245|9|42|3.5|25|Scheibe;Granola|450|9|62|18|50|Portion;Porridge mit Wasser|70|2.5|12|1.4|250|Schüssel;Porridge mit Milch|110|5|15|3|250|Schüssel;Chiasamen|486|17|42|31|15|EL;Leinsamen|534|18|29|42|10|EL;Walnüsse|654|15|14|65|30|Handvoll;Cashews|553|18|30|44|30|Handvoll;Erdnüsse|567|26|16|49|30|Handvoll;Pistazien|560|20|28|45|30|Handvoll;Kürbiskerne|559|30|11|49|20|Portion;Sonnenblumenkerne|584|21|20|51|20|Portion;Kokosöl|862|0|0|100|10|EL;Rapsöl|884|0|0|100|10|EL;Margarine|720|0.2|0.5|80|10|Portion;"
++"Ketchup|100|1.2|23|0.2|20|Portion;Mayonnaise|680|1|1|75|15|EL;Senf|70|4|5|4|10|TL;Pesto|450|5|5|45|30|Portion;Tomatensoße|50|1.5|7|1.5|125|Portion;Sojasoße|55|8|5|0.1|15|EL;BBQ-Soße|170|1|40|0.5|20|Portion;Salatdressing|300|1|10|28|30|Portion;Balsamico|90|0.5|17|0|15|EL;Nutella|539|6|57|31|20|Portion;Ahornsirup|260|0|67|0|20|EL;Zucker|400|0|100|0|5|TL;"
++"Pizza Salami|270|12|29|12|350|Pizza;Pizza Tonno|240|12|28|9|350|Pizza;Pizzastück|270|11|30|11|150|Stück;Flammkuchen|260|8|27|13|300|Stück;Lasagne vegetarisch|130|5|14|6|350|Portion;Spaghetti Carbonara|210|9|23|9|400|Teller;Nudeln mit Pesto|230|7|31|9|350|Teller;Mac and Cheese|190|8|21|8|300|Portion;Chili con Carne|110|8|9|4.5|350|Portion;Curry mit Reis|150|7|20|5|450|Teller;Gebratene Nudeln|170|6|23|6|350|Portion;Gebratener Reis|160|5|24|5|350|Portion;Kartoffelsalat|150|2|15|9|200|Portion;Nudelsalat|190|4|20|10|200|Portion;Linsensuppe|80|5|10|2|350|Teller;Gemüsesuppe|35|1.5|5|1|350|Teller;Hühnersuppe|45|4|4|1.5|350|Teller;Gulaschsuppe|80|6|5|4|350|Teller;Eintopf|90|5|9|3.5|400|Teller;Schnitzel mit Pommes|260|13|24|13|450|Teller;Cordon bleu|260|18|11|16|200|Stück;Käsespätzle|240|10|23|12|350|Portion;Kaiserschmarrn|230|7|30|9|300|Portion;Wrap mit Hähnchen|210|12|22|8|250|Stück;Burrito|200|9|25|7|300|Stück;Sandwich|240|11|28|9|200|Stück;Belegtes Brötchen (Käse)|280|12|30|12|120|Stück;Belegtes Brötchen (Salami)|300|12|30|14|120|Stück;Toast Hawaii|220|11|20|11|150|Stück;Salat mit Hähnchen|90|10|4|4|350|Schüssel;Caesar Salad|150|8|6|10|300|Schüssel;Bowl mit Reis und Hähnchen|140|10|17|4|450|Schüssel;Poke Bowl|140|8|18|4|450|Schüssel;Ramen|90|4|12|3|500|Schüssel;Dürüm Döner|210|12|20|9|400|Stück;Lahmacun|220|9|30|7|200|Stück;Hamburger|250|12|28|10|120|Stück;Cheeseburger|265|14|27|12|130|Stück;Big Mac|257|12|20|14|215|Stück;Hot Dog|250|10|25|13|150|Stück;Frühlingsrolle|220|5|25|11|60|Stück;"
++"Kuchen (Rührkuchen)|380|6|50|17|80|Stück;Käsekuchen|300|7|26|19|120|Stück;Apfelkuchen|250|3|35|11|120|Stück;Schokokuchen|420|5|50|22|80|Stück;Muffin|400|6|50|20|90|Stück;Donut|420|5|50|22|60|Stück;Kekse|480|6|65|22|10|Stück;Müsliriegel|420|7|65|14|25|Riegel;Zartbitterschokolade|550|8|46|36|25|Riegel;Schokoriegel|480|5|62|23|50|Riegel;Popcorn|380|8|60|13|50|Portion;Salzstangen|380|10|78|3|50|Portion;Erdnussflips|540|13|47|33|50|Portion;Lakritz|350|3|80|0.5|50|Portion;Tiramisu|280|5|25|17|150|Portion;Milchreis|110|3.5|19|2.5|200|Becher;Joghurteis|140|3.5|22|4|100|Portion;"
++"Apfelsaft|46|0.1|11|0.1|250|Glas;Apfelschorle|24|0|6|0|500|Flasche;Eistee|30|0|7.5|0|500|Flasche;Energy Drink|45|0|11|0|250|Dose;Energy Drink zuckerfrei|3|0|0.5|0|250|Dose;Fanta|39|0|9.5|0|330|Dose;Sprite|36|0|9|0|330|Dose;Malzbier|45|0.4|11|0|330|Flasche;Alkoholfreies Bier|26|0.4|5.5|0|500|Flasche;Weißwein|82|0.1|2.6|0|200|Glas;Rotwein|85|0.1|2.6|0|200|Glas;Sekt|83|0.2|4|0|100|Glas;Weizenbier|45|0.5|3.5|0|500|Flasche;Wodka|231|0|0|0|40|Glas;Kaffee schwarz|2|0.1|0|0|200|Tasse;Latte Macchiato|50|3|4.5|2.2|300|Glas;Proteinshake mit Wasser|38|7.5|1|0.6|330|Shaker;Proteinshake mit Milch|85|8.5|5|2.2|330|Shaker;Iso-Getränk|25|0|6|0|500|Flasche").split(";").map(function(s){var a=s.split("|");return [a[0],+a[1],+a[2],+a[3],+a[4],+a[5],a[6]];});
+(function(){var have={};FDB.forEach(function(r){have[r[0].toLowerCase()]=1;});FDB2.forEach(function(r){if(!have[r[0].toLowerCase()]){FDB.push(r);have[r[0].toLowerCase()]=1;}});})();
+/* Suche ohne Rücksicht auf Groß-/Kleinschreibung, Umlaute und Wortreihenfolge */
+function nNorm(s){return String(s||"").toLowerCase().replace(/ä/g,"a").replace(/ö/g,"o").replace(/ü/g,"u").replace(/ß/g,"ss").replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();}
+function nMatch(name,q){if(!q)return true;var n=nNorm(name);return nNorm(q).split(" ").every(function(w){return n.indexOf(w)>-1||(w.length>4&&n.indexOf(w.slice(0,-1))>-1);});}
+/* Online-Suche in Open Food Facts (nur iPhone-App, im Artefakt gesperrt) und Schätzung durch Claude (nur Artefakt) */
+function nOnline(q){
+  var st=ui.nf;st.on={st:"busy",q:q,list:[]};var l=$("nf-list");if(l)l.innerHTML=nfListHtml(st.q);
+  var map=function(arr){return (arr||[]).map(function(p){var nu=p.nutriments||{},k=+nu["energy-kcal_100g"];if(!(k>=0)&&+nu["energy_100g"]>=0)k=+nu["energy_100g"]/4.184;var nm=clean(((Array.isArray(p.brands)?p.brands[0]:p.brands?String(p.brands).split(",")[0]:"")+" "+(p.product_name_de||p.product_name||"")).trim());return nm&&k>=0&&k<=950?{n:nm,k:Math.round(k),p:+nu.proteins_100g||0,c:+nu.carbohydrates_100g||0,f:+nu.fat_100g||0,pg:nNum(p.serving_quantity,1,2000)||100,pl:"Portion",src:"web"}:null;}).filter(Boolean).slice(0,15);};
+  var done=function(L,err){if(!ui.nf||ui.nf.q!==q)return;st.on={st:"done",q:q,list:L,err:err};var el=$("nf-list");if(el)el.innerHTML=nfListHtml(st.q);};
+  fetch("https://world.openfoodfacts.org/cgi/search.pl?search_terms="+encodeURIComponent(q)+"&search_simple=1&json=1&page_size=20&lc=de&cc=de&fields=product_name,product_name_de,brands,nutriments,serving_quantity").then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){done(map(j.products));})
+    .catch(function(){var ws=nNorm(q).split(" ");fetch("https://world.openfoodfacts.org/api/v2/search?categories_tags_de="+encodeURIComponent(ws[0])+"&countries_tags_en=germany&page_size=50&sort_by=unique_scans_n&fields=product_name,product_name_de,brands,nutriments,serving_quantity").then(function(r){return r.json();}).then(function(j){var L=map(j.products),F=L.filter(function(x){return nMatch(x.n,q);});done(F.length?F:L);}).catch(function(){done([],1);});});
+}
+function nAskFood(q){
+  if(!nSample)return;var st=ui.nf;st.on={st:"busy",q:q,list:[],ai:1};var l=$("nf-list");if(l)l.innerHTML=nfListHtml(st.q);
+  nSample.json('Gib typische Nährwerte pro 100 g für dieses Lebensmittel oder Gericht nach deutschen Nährwerttabellen (BLS) an: "'+q.slice(0,80)+'". Wenn es mehrere übliche Varianten gibt (roh/gekocht, Sorten), gib bis zu 4 an. Antworte nur mit JSON: {"items":[{"name":"Blumenkohl gekocht","kcal":23,"protein":1.8,"carbs":2.7,"fat":0.3,"portion":200,"portion_name":"Portion"}]}',{modelTier:"quick"}).then(function(r){
+    var L=(r&&Array.isArray(r.items)?r.items:[]).map(function(x){var k=+x.kcal;return clean(x.name)&&k>=0&&k<=950?{n:clean(x.name),k:Math.round(k),p:+x.protein||0,c:+x.carbs||0,f:+x.fat||0,pg:nNum(x.portion,1,2000)||100,pl:clean(x.portion_name)||"Portion",src:"ai"}:null;}).filter(Boolean);
+    if(ui.nf&&ui.nf.q===q){st.on={st:"done",q:q,list:L,ai:1};var el=$("nf-list");if(el)el.innerHTML=nfListHtml(st.q);}
+  },function(){if(ui.nf&&ui.nf.q===q){st.on={st:"done",q:q,list:[],ai:1};var el=$("nf-list");if(el)el.innerHTML=nfListHtml(st.q);}});
+}
 var NU=NU||{g:null,d:{},f:{}},nuDirty=nuDirty||{},nuSetDirty=nuSetDirty||false,remoteNu=remoteNu||{},nuQ=[];
 function nNum(v,lo,hi){v=+v;return isFinite(v)&&v>=lo&&v<=hi?v:null;}
 function cleanItem(x){
@@ -2771,13 +2803,14 @@ function goalForm(first){
 /* Suchen und Hinzufügen */
 function nFoodList(q){
   var o=[],seen={},Q=String(q||"").toLowerCase().trim();
-  function addF(n,a,src){if(seen[n])return;if(Q&&n.toLowerCase().indexOf(Q)<0)return;seen[n]=1;o.push({n:n,k:a[0],p:a[1],c:a[2],f:a[3],pg:a[4],pl:a[5]||"Portion",src:src});}
+  function addF(n,a,src){if(seen[n])return;if(Q&&!nMatch(n,Q))return;seen[n]=1;o.push({n:n,k:a[0],p:a[1],c:a[2],f:a[3],pg:a[4],pl:a[5]||"Portion",src:src});}
   /* zuletzt gegessen zuerst */
   var rec=[];Object.keys(NU.d).sort().reverse().slice(0,30).forEach(function(d){NU.d[d].m.forEach(function(m){m.forEach(function(x){if(x.g&&rec.length<60&&!rec.some(function(r){return r.n===x.n;}))rec.push(x);});});});
   rec.forEach(function(x){var f=100/x.g;addF(x.n,[x.k*f,x.p*f,x.c*f,x.f*f,x.g,"zuletzt"],"rec");});
   Object.keys(NU.f).forEach(function(n){addF(n,NU.f[n],"own");});
   FDB.forEach(function(r){addF(r[0],r.slice(1),"db");});
-  return o.slice(0,Q?40:25);
+  var on=ui.nf&&ui.nf.on&&ui.nf.on.q===q?ui.nf.on.list:[];o=o.slice(0,Q?40:25);on.forEach(function(x){if(!seen[x.n]){seen[x.n]=1;o.push(x);}});
+  return o;
 }
 function foodHtml(){
   var st=ui.nf||(ui.nf={m:nDefMeal(),q:"",sel:null}),h='<div class="sh"><h2 id="sheet-t">Hinzufügen</h2><button class="btn sm ghost" data-a="shut">Schließen</button></div>';
@@ -2785,7 +2818,7 @@ function foodHtml(){
   if(st.sel){
     var s=st.sel,g=st.g||s.pg||100,f=g/100;
     h+='<div class="nsel"><b>'+esc(s.n)+'</b><small class="m">pro 100 g: '+NF0.format(s.k)+' kcal · E '+NF1.format(s.p)+' · K '+NF1.format(s.c)+' · F '+NF1.format(s.f)+'</small>'
-      +'<div class="nqty"><label for="nf-g">Menge in g</label><input id="nf-g" inputmode="decimal" value="'+NF0.format(g).replace(".","")+'"><div class="chips">'+[[s.pg,"1 "+(s.pl||"Portion")],[s.pg*2,"2 "+(s.pl||"Portion")],[100,"100 g"]].filter(function(x,i,a){return a.findIndex(function(y){return y[0]===x[0];})===i;}).map(function(x){return '<button class="chip" data-a="nfg" data-v="'+x[0]+'">'+esc(x[1])+'</button>';}).join("")+'</div></div>'
+      +'<div class="nqty"><label for="nf-g">Menge in g</label><input id="nf-g" inputmode="decimal" value="'+NF0.format(g).replace(".","")+'"><div class="chips">'+(s.pk?[[s.pk,"Ganze Packung"],[s.pk/2,"Halbe Packung"]].concat(s.pg!==s.pk&&s.pg!==100?[[s.pg,"Eine Portion"]]:[]):[[s.pg,"1 "+(s.pl||"Portion")],[s.pg*2,"2 "+(s.pl||"Portion")],[100,"100 g"]]).map(function(x){return [Math.round(x[0]),x[1]];}).filter(function(x,i,a){return a.findIndex(function(y){return y[0]===x[0];})===i;}).map(function(x){return '<button class="chip" data-a="nfg" data-v="'+x[0]+'">'+esc(x[1])+'</button>';}).join("")+'</div></div>'
       +'<p class="nres" id="nf-res">'+NF0.format(s.k*f)+' kcal · E '+NF0.format(s.p*f)+' g · K '+NF0.format(s.c*f)+' g · F '+NF0.format(s.f*f)+' g</p>'
       +'<div class="btn2"><button class="btn ghost" data-a="nfback">Zurück</button><button class="btn pri" data-a="nfadd">Hinzufügen</button></div></div>';
     return h;
@@ -2797,8 +2830,17 @@ function foodHtml(){
   return h;
 }
 function nfListHtml(q){
-  var L=nFoodList(q);if(!L.length)return '<p class="m">Nichts gefunden. Trag es unten selbst ein'+(nAsk?' oder lass es beschreiben':'')+'.</p>';
-  return L.map(function(x,i){return '<button class="nfr" data-a="nfpick" data-i="'+i+'"><span><b>'+esc(x.n)+'</b><small>'+(x.src==="rec"?'zuletzt · ':x.src==="own"?'eigenes · ':'')+NF0.format(x.k)+' kcal / 100 g</small></span><span class="m">'+NF0.format(x.k*x.pg/100)+' kcal<br><small>'+NF0.format(x.pg)+' g</small></span></button>';}).join("");
+  var L=nFoodList(q),on=ui.nf&&ui.nf.on&&ui.nf.on.q===q?ui.nf.on:null,h="";
+  h+=L.map(function(x,i){return '<button class="nfr" data-a="nfpick" data-i="'+i+'"><span><b>'+esc(x.n)+'</b><small>'+(x.src==="rec"?'zuletzt · ':x.src==="own"?'eigenes · ':x.src==="web"?'online · ':x.src==="ai"?'von Claude geschätzt · ':'')+NF0.format(x.k)+' kcal / 100 g</small></span><span class="m">'+NF0.format(x.k*x.pg/100)+' kcal<br><small>'+NF0.format(x.pg)+' g</small></span></button>';}).join("");
+  if(q&&String(q).trim().length>=2){
+    if(on&&on.st==="busy")h+='<p class="m nfmore"><span class="spin sm" aria-hidden="true"></span> '+(on.ai?'Claude schätzt die Nährwerte …':'Suche online …')+'</p>';
+    else{
+      if(on&&on.st==="done"&&!on.list.length)h+='<p class="m nfmore">'+(on.ai?'Claude konnte nichts schätzen.':on.err?'Die Online-Suche ist gerade nicht erreichbar.':'Online nichts gefunden.')+' Trag es unten selbst ein.</p>';
+      var b=[];if(APP&&!(on&&!on.ai))b.push('<button class="btn sm" data-a="nfweb">Online suchen</button>');if(nAsk&&!(on&&on.ai))b.push('<button class="btn sm" data-a="nfai">Claude schätzen lassen</button>');
+      if(b.length)h+='<div class="btnrow nfmore"><span class="m">'+(L.length?'Nicht dabei?':'Nicht in der Liste.')+'</span>'+b.join("")+'</div>';
+    }
+  }
+  return h||'<p class="m">Nichts gefunden. Trag es unten selbst ein.</p>';
 }
 function nDefMeal(){var h=new Date().getHours();return h<10?0:h<15?1:h<21?2:3;}
 function nAddItems(d,mi,items){var day=NU.d[d]||(NU.d[d]={m:[[],[],[],[]],w:0,u:0});items.forEach(function(x){var c=cleanItem(x);if(c)day.m[mi].push(c);});nSave(d);}
@@ -2886,6 +2928,8 @@ function zxing(){
   return zxLoad;
 }
 function zxReader(Z){var hn=new Map();hn.set(Z.DecodeHintType.POSSIBLE_FORMATS,[Z.BarcodeFormat.EAN_13,Z.BarcodeFormat.EAN_8,Z.BarcodeFormat.UPC_A,Z.BarcodeFormat.UPC_E]);hn.set(Z.DecodeHintType.TRY_HARDER,true);return new Z.BrowserMultiFormatReader(hn);}
+/* Packungsgröße aus Open Food Facts, z. B. "200 g", "0,5 l", "4 x 25 g" */
+function nPack(q){var s=String(q||"").toLowerCase().replace(",",".");var m=s.match(/(\d+)\s*x\s*([\d.]+)\s*(kg|g|ml|cl|l)\b/),f=1;if(m){f=+m[1];s=m[2]+" "+m[3];}m=s.match(/([\d.]+)\s*(kg|g|ml|cl|l)\b/);if(!m)return null;var v=+m[1]*({kg:1000,g:1,ml:1,cl:10,l:1000}[m[2]])*f;return v>=5&&v<=5000?Math.round(v):null;}
 function barStop(){try{if(zxR)zxR.reset();}catch(e){}zxR=null;}
 function barHtml(){
   var b=ui.bar||{};
@@ -2900,7 +2944,7 @@ function barStart(){
   var v=$("barvid");if(!v)return;
   zxing().then(function(Z){
     if(ui.sheet!=="bar")return;barStop();zxR=zxReader(Z);
-    return zxR.decodeFromConstraints({video:{facingMode:"environment"}},v,function(res){if(res&&ui.sheet==="bar"){var c=res.getText();barStop();try{navigator.vibrate&&navigator.vibrate(60);}catch(e){}barLookup(c);}});
+    return zxR.decodeFromConstraints({video:{facingMode:{ideal:"environment"},width:{ideal:1280},height:{ideal:720}}},v,function(res){if(res&&ui.sheet==="bar"){var c=res.getText();barStop();try{navigator.vibrate&&navigator.vibrate(60);}catch(e){}barLookup(c);}});
   }).catch(function(){var m=$("barmsg");if(m)m.textContent="Die Kamera ist nicht verfügbar. Erlaube den Kamerazugriff, nimm „Foto vom Barcode“ oder tipp die Nummer ein.";});
 }
 function barFromImage(file){
@@ -2915,15 +2959,15 @@ function barLookup(code){
   var done=function(p){
     if(!p){ui.bar={msg:"Produkt "+code+" ist nicht in der Datenbank oder hat keine Nährwerte. Fotografiere die Nährwerttabelle im Artefakt oder trag es selbst ein."};renderSheet();barStart();return;}
     barCache[code]=p;NU.f[p.n]=[p.k,p.p,p.c,p.f,p.pg];nuSetDirty=true;bump();persist();
-    ui.nf={m:nDefMeal(),q:"",sel:{n:p.n,k:p.k,p:p.p,c:p.c,f:p.f,pg:p.pg,pl:p.pl,src:"own"},g:p.pg};ui.sheet="food";renderSheet();
+    ui.nf={m:nDefMeal(),q:"",sel:{n:p.n,k:p.k,p:p.p,c:p.c,f:p.f,pg:p.pg,pl:p.pl,pk:p.pk,src:"own"},g:p.pk||p.pg};ui.sheet="food";renderSheet();
   };
   if(barCache[code]){done(barCache[code]);return;}
-  fetch("https://world.openfoodfacts.org/api/v2/product/"+code+".json?fields=product_name,product_name_de,brands,nutriments,serving_quantity,quantity").then(function(r){return r.json();}).then(function(j){
+  fetch("https://world.openfoodfacts.org/api/v2/product/"+code+".json?fields=product_name,product_name_de,brands,nutriments,serving_quantity,quantity,product_quantity").then(function(r){return r.json();}).then(function(j){
     var pr=j&&j.status===1&&j.product,nu=pr&&pr.nutriments;if(!nu){done(null);return;}
     var k=+nu["energy-kcal_100g"];if(!(k>=0)&&+nu["energy_100g"]>=0)k=+nu["energy_100g"]/4.184;
     if(!(k>=0&&k<=950)){done(null);return;}
     var name=clean((pr.brands?String(pr.brands).split(",")[0]+" ":"")+(pr.product_name_de||pr.product_name||"Produkt "+code)),sq=nNum(pr.serving_quantity,1,2000);
-    done({n:name,k:Math.round(k),p:+nu.proteins_100g||0,c:+nu.carbohydrates_100g||0,f:+nu.fat_100g||0,pg:sq||100,pl:sq?"Portion laut Packung":"100 g"});
+    done({n:name,k:Math.round(k),p:+nu.proteins_100g||0,c:+nu.carbohydrates_100g||0,f:+nu.fat_100g||0,pg:sq||nPack(pr.quantity)||100,pl:sq?"Portion laut Packung":"100 g",pk:nPack(pr.quantity)});
   }).catch(function(){ui.bar={msg:"Keine Verbindung zur Produktdatenbank. Prüfe das Internet oder trag es selbst ein."};renderSheet();barStart();});
 }
 function nScale(x){var f=(x.g||x.g0)/x.g0;return {k:x.k0*f,p:x.p0*f,c:x.c0*f,f:x.f0*f};}
@@ -2952,6 +2996,8 @@ document.addEventListener("click",function(ev){
   else if(a==="nfm"){ui.nf.m=+t.getAttribute("data-v");document.querySelectorAll('[data-a="nfm"]').forEach(function(b){b.setAttribute("aria-pressed",String(+b.getAttribute("data-v")===ui.nf.m));});}
   else if(a==="nfpick"){var L=nFoodList(ui.nf.q),x=L[+t.getAttribute("data-i")];if(!x)return;ui.nf.sel=x;ui.nf.g=x.pg;renderSheet();}
   else if(a==="nfback"){ui.nf.sel=null;renderSheet();}
+  else if(a==="nfweb"){nOnline(String(ui.nf.q||"").trim());}
+  else if(a==="nfai"){nAskFood(String(ui.nf.q||"").trim());}
   else if(a==="nfg"){ui.nf.g=+t.getAttribute("data-v");renderSheet();}
   else if(a==="nfadd"){
     var s=ui.nf.sel,g=nNum(num(($("nf-g")||{}).value),1,5000);if(!s||!g){toast("Bitte eine Menge in Gramm eingeben");return;}var r=g/100;
