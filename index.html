@@ -830,6 +830,7 @@ button.hc{cursor:pointer}
 .nph input[type=checkbox]{width:20px;min-height:20px}
 .nph.off{opacity:.5}
 .phg{text-align:center;padding:0 4px}
+.nrec{display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:12px;background:var(--raise)}
 .nfmore{margin:10px 0 4px;align-items:center;gap:8px;font-size:13px}.spin.sm{width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle}
 .nib{background:none;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer;min-width:0}
 .nml.nsk{padding-block:12px;opacity:.75}.nml.nsk .ch{margin-bottom:4px}
@@ -2678,6 +2679,42 @@ function nAskFood(q){
     if(ui.nf&&ui.nf.q===q){st.on={st:"done",q:q,list:L,ai:1};var el=$("nf-list");if(el)el.innerHTML=nfListHtml(st.q);}
   },function(){if(ui.nf&&ui.nf.q===q){st.on={st:"done",q:q,list:[],ai:1};var el=$("nf-list");if(el)el.innerHTML=nfListHtml(st.q);}});
 }
+/* Restaurant- und Imbiss-Gerichte (pro 100 g, typische Portion), geschätzt nach üblichen Rezepten und Nährwerttabellen */
+var FDB3=("Pizza Tonno (Pizzeria)|235|12|27|8.5|450|Pizza;Pizza Margherita (Pizzeria)|245|10|31|8.5|420|Pizza;Pizza Salami (Pizzeria)|265|11|29|11.5|450|Pizza;Pizza Funghi|225|10|28|8|430|Pizza;Pizza Prosciutto|240|12|28|9|450|Pizza;Pizza Hawaii|230|11|29|7.5|470|Pizza;Pizza Quattro Formaggi|285|13|28|14|450|Pizza;Pizza Diavolo|265|11|28|12|450|Pizza;Pizza Spinaci|225|10|27|8.5|450|Pizza;Pizza vegetarisch|210|9|28|7|470|Pizza;Calzone|250|11|28|10|450|Stück;Pizzabrötchen|300|9|40|11|150|Portion;Bruschetta|200|5|26|8|150|Portion;Spaghetti Aglio e Olio|210|6|30|7.5|350|Teller;Spaghetti Napoli|140|4.5|26|2.5|400|Teller;Penne Arrabbiata|145|4.5|26|3|400|Teller;Tagliatelle mit Lachs in Sahnesoße|190|8|20|9|400|Teller;Pasta mit Garnelen|160|9|22|4|400|Teller;Tortellini in Sahnesoße|210|8|22|10|400|Teller;Gnocchi in Gorgonzolasoße|200|6|22|10|400|Teller;Risotto|150|4|22|5|350|Teller;Antipasti|130|5|6|10|200|Teller;Tiramisu (Restaurant)|300|6|28|18|150|Portion;Panna Cotta|230|3|22|15|120|Portion;"
++"Mango Chicken (Vietnamese)|130|8|15|4.5|450|Teller;Erdnusssoße|330|11|15|26|50|Portion;Huhn mit Erdnusssoße und Reis|170|9|20|6|450|Teller;Pho Bo (Rindernudelsuppe)|55|4.5|6.5|1.2|600|Schüssel;Pho Ga (Hühnernudelsuppe)|50|4.5|6|1|600|Schüssel;Bun Bo Nam Bo|135|8|17|4|400|Schüssel;Sommerrollen|120|5|20|2|120|2 Stück;Frühlingsrollen frittiert|230|5|24|12|120|2 Stück;Gebratene Nudeln mit Huhn|160|8|21|5|450|Teller;Gebratene Nudeln mit Garnelen|150|7|21|4.5|450|Teller;Gebratener Reis mit Huhn|165|7|23|5|450|Teller;Ente knusprig mit Reis|210|10|20|10|450|Teller;Rotes Curry mit Huhn|120|8|6|7|350|Portion;Grünes Curry mit Huhn|115|8|5|7|350|Portion;Kokoscurry mit Reis|150|6|20|5|450|Teller;Pad Thai|175|8|22|6|400|Teller;Tom Kha Gai|90|5|4|6|350|Schüssel;Süßsauer Huhn mit Reis|160|7|24|4|450|Teller;Hühnchen süßsauer frittiert|220|10|22|10|250|Portion;Chop Suey|80|6|6|3.5|350|Portion;Kung Pao Chicken|150|11|8|8|350|Portion;Mapo Tofu|110|7|4|7|300|Portion;Dim Sum|190|8|24|6|150|Portion;Wantan-Suppe|50|3|6|1.5|400|Schüssel;Glasnudelsalat|110|5|18|2|250|Portion;Bami Goreng|170|8|20|6|450|Teller;Nasi Goreng|175|7|23|6|450|Teller;Teriyaki Chicken mit Reis|155|9|22|3|450|Teller;"
++"Sushi Nigiri|150|7|26|1.5|180|6 Stück;Sushi California Roll|170|5|26|5|200|8 Stück;Sushi Inside Out (Lachs)|180|6|25|6|200|8 Stück;Sashimi|140|22|0|5|150|Portion;Ramen mit Schweinefleisch|95|5|11|3.5|600|Schüssel;Udon-Suppe|70|3|12|1|500|Schüssel;Gyoza|200|8|24|8|150|Portion;Miso-Suppe|35|2.5|3.5|1.2|250|Schüssel;Edamame gesalzen|125|11|9|5|150|Portion;"
++"Chicken Tikka Masala mit Reis|150|8|17|5.5|450|Teller;Butter Chicken|160|10|6|11|350|Portion;Chicken Korma|170|10|7|11|350|Portion;Lamm Curry|150|10|5|10|350|Portion;Dal (Linsencurry)|110|6|15|3|300|Portion;Palak Paneer|140|7|5|10|300|Portion;Naan-Brot|300|9|50|7|90|Stück;Basmatireis (Restaurant)|150|3|31|1.5|200|Portion;Samosa|260|5|28|14|100|2 Stück;Biryani|170|8|22|6|400|Teller;"
++"Döner Kebab im Brot|220|12|21|10|350|Stück;Dürüm|210|12|20|9.5|400|Stück;Döner-Teller mit Pommes|195|10|16|10|550|Teller;Döner-Box mit Pommes|210|9|19|11|450|Box;Döner-Teller mit Reis|170|11|18|6|550|Teller;Pide mit Käse|260|11|33|9|350|Stück;Börek mit Käse|300|9|28|17|180|Stück;Köfte-Teller|175|11|14|8.5|450|Teller;Falafel-Teller|190|6|21|9|450|Teller;Falafel im Brot|220|7|30|8|300|Stück;Ayran|40|1.7|3|2.3|250|Becher;Baklava|430|6|52|22|60|Stück;"
++"Gyros-Teller mit Pommes|210|12|15|11|550|Teller;Gyros Pita|230|12|24|10|300|Stück;Souvlaki-Teller|190|13|14|9|500|Teller;Tzatziki|110|4|4|9|100|Portion;Bauernsalat (Griechisch)|110|4|5|9|300|Schüssel;Moussaka|150|7|8|10|400|Portion;Bifteki|230|17|3|17|200|Stück;Gefüllte Weinblätter|150|3|20|7|120|Portion;"
++"Burrito mit Hähnchen|190|10|23|6.5|350|Stück;Tacos|220|10|20|11|150|2 Stück;Quesadilla|280|13|25|14|250|Stück;Nachos mit Käse|330|8|35|18|200|Portion;Chili con Carne (Restaurant)|120|9|9|5|400|Portion;Guacamole|160|2|8|14|60|Portion;Fajitas mit Hähnchen|150|11|14|5.5|400|Portion;Bowl (Mexican)|140|8|16|5|500|Schüssel;"
++"Currywurst mit Pommes|240|7|24|13|450|Teller;Bratwurst im Brötchen|280|11|23|16|180|Stück;Pommes rot-weiß|300|3.5|35|16|200|Portion;Schnitzel Wiener Art mit Pommes|250|13|23|12|500|Teller;Jägerschnitzel mit Spätzle|190|11|15|9|500|Teller;Zigeunerschnitzel mit Pommes|210|11|21|9|550|Teller;Schweinebraten mit Knödel|170|12|14|7|500|Teller;Rouladen mit Rotkohl und Klößen|150|10|14|6|500|Teller;Sauerbraten mit Klößen|150|11|16|4.5|500|Teller;Königsberger Klopse mit Kartoffeln|140|8|12|6.5|450|Teller;Leberkäse im Brötchen|300|11|26|17|170|Stück;Fischbrötchen|220|11|22|10|150|Stück;Backfisch mit Kartoffelsalat|200|9|16|11|450|Teller;Grillhähnchen (halbes)|215|25|0|13|400|halbes;Kartoffelknödel|110|2|24|0.3|150|2 Stück;Semmelknödel|200|7|33|4|150|Stück;Bratkartoffeln mit Speck|180|4|19|10|250|Portion;Flammkuchen klassisch|260|8|27|13|350|Stück;Ofenkartoffel mit Kräuterquark|100|4|15|2.5|400|Portion;"
++"McDonald's Big Mac|257|12|20|14|215|Stück;McDonald's Cheeseburger|255|13|27|10|120|Stück;McDonald's Hamburger|245|12|29|8.5|105|Stück;McDonald's McChicken|250|10|25|12|170|Stück;McDonald's Chicken McNuggets|250|15|16|14|120|6 Stück;McDonald's Pommes mittel|290|3.5|37|14|114|mittel;McDonald's Royal TS|240|13|17|13|240|Stück;Burger King Whopper|230|11|17|13|290|Stück;Burger King Chicken Nuggets|270|14|17|16|110|6 Stück;KFC Hähnchenteil|270|19|9|17|120|Stück;KFC Hot Wings|270|20|8|17|100|4 Stück;Subway Sandwich 15 cm (Hähnchen)|160|11|20|3|230|Stück;Subway Sandwich 15 cm (Italian B.M.T.)|200|10|21|8|230|Stück;Smash Burger|270|14|20|15|250|Stück;Chicken Burger|240|12|24|10|230|Stück;Vegi Burger|230|9|26|10|230|Stück;Hot Dog (Imbiss)|260|9|26|13|160|Stück;Onion Rings|330|4|35|19|100|Portion;Milchshake|110|3.5|17|3|400|Becher;"
++"Croissant mit Schokolade|420|7|46|23|80|Stück;Butterbrezel|300|8|45|10|100|Stück;Käsebrötchen (Bäcker)|290|13|30|13|110|Stück;Mettbrötchen|250|13|22|12|120|Stück;Belegtes Baguette|240|10|28|10|250|Stück;Franzbrötchen|380|6|48|18|90|Stück;Berliner|330|6|46|14|80|Stück;Streuselkuchen|380|5|52|17|100|Stück;Zimtschnecke|370|6|50|16|100|Stück;Laugenstange mit Käse|310|12|40|11|110|Stück;Rührei mit Speck|210|13|1|17|200|Portion;Pancakes mit Sirup|230|5|38|6|200|Portion;Müsli mit Milch|130|5|19|4|300|Schüssel;Açaí Bowl|110|2|20|3|350|Schüssel;Avocado-Toast|200|5|18|12|180|Stück;Eggs Benedict|220|11|13|14|250|Portion;"
++"Garnelen-Chili-Nudeln|165|9|22|4.5|400|Teller;Hähnchen mit Reis und Brokkoli|120|12|14|2|450|Teller;Nudeln mit Tomatensoße|135|4.5|25|2|400|Teller;Nudeln mit Hackfleischsoße|155|7.5|19|5.5|400|Teller;Reis mit Gemüsepfanne|110|3|20|2|400|Teller;Kartoffeln mit Quark|90|6|12|2|400|Teller;Omelett mit Gemüse|130|8|3|9|200|Portion;Hähnchen-Gemüse-Pfanne|100|11|5|4|400|Portion;Lachs mit Kartoffeln und Gemüse|125|9|10|5|450|Teller;Wraps selbst gemacht|200|11|20|8|250|Stück;Overnight Oats|140|6|20|4|300|Glas;Protein-Pancakes|170|14|20|4|200|Portion;Thunfischsalat|120|12|3|7|250|Schüssel;Couscous-Salat|130|4|20|4|250|Schüssel;Chili sin Carne|90|5|12|2|400|Portion;Gemüsesuppe selbst gemacht|40|1.5|6|1.2|400|Teller").split(";").map(function(s){var a=s.split("|");return [a[0],+a[1],+a[2],+a[3],+a[4],+a[5],a[6]];});
+(function(){var have={};FDB.forEach(function(r){have[r[0].toLowerCase()]=1;});FDB3.forEach(function(r){if(!have[r[0].toLowerCase()]){FDB.push(r);have[r[0].toLowerCase()]=1;}});})();
+/* ---------- Eigene Rezepte: Zutaten zusammenstellen, als Lebensmittel speichern ---------- */
+function recHtml(){
+  var rc=ui.rc,tk=0,tg=0;rc.items.forEach(function(x){tk+=x.k;tg+=x.g||0;});
+  return '<div class="nrec"><label class="lbl" for="rc-n">Rezept</label><input id="rc-n" maxlength="50" placeholder="z. B. Garnelen-Chili-Nudeln" value="'+esc(rc.n)+'">'
+    +(rc.items.length?'<div class="nil">'+rc.items.map(function(x,i){return '<div class="nit"><span class="nin"><b>'+esc(x.n)+'</b><small>'+NF0.format(x.g||0)+' g</small></span><span class="nik">'+NF0.format(x.k)+'</span><button class="x" data-a="rcdel" data-i="'+i+'" aria-label="'+esc(x.n)+' entfernen">✕</button></div>';}).join("")+'</div>':'<p class="m" style="margin:0;font-size:13px">Füge unten die Zutaten mit Menge hinzu, z. B. 125 g Nudeln, 150 g Garnelen, 1 EL Olivenöl.</p>')
+    +'<div class="inl"><label class="lbl" for="rc-p" style="align-self:center">Portionen</label><input id="rc-p" inputmode="numeric" value="'+rc.por+'" style="max-width:80px"><span class="m" id="rc-sum" style="align-self:center">'+(rc.items.length?NF0.format(tk)+' kcal gesamt · '+NF0.format(tk/Math.max(1,rc.por))+' pro Portion':'')+'</span></div>'
+    +'<div class="btn2"><button class="btn ghost" data-a="rcno">Abbrechen</button><button class="btn pri" data-a="rcsave"'+(rc.items.length?'':' disabled')+'>Rezept speichern</button></div><p class="lbl" style="margin-top:6px">Zutat suchen</p></div>';
+}
+document.addEventListener("click",function(ev){
+  var t=ev.target.closest?ev.target.closest("[data-a]"):null;if(!t||t.disabled||ro)return;var a=t.getAttribute("data-a");
+  if(a==="rcnew"){ui.rc={n:"",items:[],por:1};ui.nf.q="";ui.nf.sel=null;renderSheet();var n=$("rc-n");if(n)n.focus();}
+  else if(a==="rcno"){ui.rc=null;renderSheet();}
+  else if(a==="rcdel"&&ui.rc){var n1=$("rc-n");if(n1)ui.rc.n=n1.value;ui.rc.items.splice(+t.getAttribute("data-i"),1);renderSheet();}
+  else if(a==="rcsave"&&ui.rc){
+    var nm=clean(($("rc-n")||{}).value).slice(0,50),por=Math.max(1,Math.min(20,parseInt(($("rc-p")||{}).value,10)||1)),s={k:0,p:0,c:0,f:0,g:0};
+    if(!nm){toast("Bitte einen Namen für das Rezept eingeben");return;}
+    ui.rc.items.forEach(function(x){s.k+=x.k;s.p+=x.p;s.c+=x.c;s.f+=x.f;s.g+=x.g||0;});
+    if(!(s.g>0)){toast("Bitte die Zutaten mit Gramm eintragen");return;}
+    var q=100/s.g,pg=Math.round(s.g/por);NU.f[nm]=[s.k*q,s.p*q,s.c*q,s.f*q,pg];nuSetDirty=true;bump();persist();
+    ui.rc=null;ui.nf.sel={n:nm,k:s.k*q,p:s.p*q,c:s.c*q,f:s.f*q,pg:pg,pl:"Portion",src:"own"};ui.nf.g=pg;renderSheet();
+    toast("Rezept gespeichert. Es steht jetzt in der Suche.");
+  }
+});
 var NU=NU||{g:null,d:{},f:{}},nuDirty=nuDirty||{},nuSetDirty=nuSetDirty||false,remoteNu=remoteNu||{},nuQ=[];
 function nNum(v,lo,hi){v=+v;return isFinite(v)&&v>=lo&&v<=hi?v:null;}
 function cleanItem(x){
@@ -2746,6 +2783,7 @@ function nDays7(){var o=[],td=today();for(var i=6;i>=0;i--){var d=add(td,-i);o.p
 function rFood(){
   var d=ui.nd||today(),td=today(),T=nTargets(),h=vhead("Ernährung",esc(relDay(d)||longDate(d)));
   h+='<div class="datebar"><button class="btn" data-a="nstep" data-v="-1" aria-label="Vorheriger Tag">‹</button><div class="dtmid"><b>'+(relDay(d)||WD[P(d).getDay()]+', '+fmt(d))+'</b><small>'+esc(longDate(d))+'</small></div><button class="btn" data-a="nstep" data-v="1" aria-label="Nächster Tag"'+(d>=td?' disabled':'')+'>›</button></div>';
+  if(APP)setTimeout(function(){zxing().catch(function(){});},1200);
   if(!T)return h+goalForm(true);
   if(ui.ngEdit&&!ro)return h+goalForm(false);
   var s=nSum(d),day=nDay(d);
@@ -2823,8 +2861,10 @@ function foodHtml(){
       +'<div class="btn2"><button class="btn ghost" data-a="nfback">Zurück</button><button class="btn pri" data-a="nfadd">Hinzufügen</button></div></div>';
     return h;
   }
+  if(ui.rc)h+=recHtml();
   h+='<label class="vh" for="nf-q">Lebensmittel suchen</label><input id="nf-q" type="search" autocomplete="off" enterkeyhint="search" placeholder="Suchen, z. B. Haferflocken" value="'+esc(st.q)+'">';
   h+='<div class="nfl" id="nf-list">'+nfListHtml(st.q)+'</div>';
+  if(!ui.rc&&!ro)h+='<button class="btn wide ghost" data-a="rcnew">+ Eigenes Rezept erstellen</button>';
   h+='<details class="nman"'+(st.man?' open':'')+'><summary>Selbst eintragen</summary><div class="panel"><label for="nm-n">Name</label><input id="nm-n" maxlength="60" placeholder="z. B. Mensa-Essen" value="'+esc(st.q)+'"><div class="grid3"><label for="nm-k">kcal<input id="nm-k" inputmode="numeric"></label><label for="nm-p">Eiweiß g<input id="nm-p" inputmode="decimal"></label><label for="nm-g">Menge g<input id="nm-g" inputmode="numeric" placeholder="optional"></label></div><div class="grid3"><label for="nm-c">KH g<input id="nm-c" inputmode="decimal"></label><label for="nm-f">Fett g<input id="nm-f" inputmode="decimal"></label><span></span></div>'
     +'<label class="nchk"><input type="checkbox" id="nm-save"> Als eigenes Lebensmittel merken (Werte gelten dann für die Menge)</label><button class="btn pri" data-a="nmadd">Hinzufügen</button></div></details>';
   return h;
@@ -2962,13 +3002,16 @@ function barLookup(code){
     ui.nf={m:nDefMeal(),q:"",sel:{n:p.n,k:p.k,p:p.p,c:p.c,f:p.f,pg:p.pg,pl:p.pl,pk:p.pk,src:"own"},g:p.pk||p.pg};ui.sheet="food";renderSheet();
   };
   if(barCache[code]){done(barCache[code]);return;}
-  fetch("https://world.openfoodfacts.org/api/v2/product/"+code+".json?fields=product_name,product_name_de,brands,nutriments,serving_quantity,quantity,product_quantity").then(function(r){return r.json();}).then(function(j){
-    var pr=j&&j.status===1&&j.product,nu=pr&&pr.nutriments;if(!nu){done(null);return;}
+  /* UPC-A (12 Ziffern) und EAN-13 mit führender 0 sind derselbe Code: beide Schreibweisen probieren */
+  var alts=[code];if(code.length===12)alts.push("0"+code);if(code.length===13&&code.charAt(0)==="0")alts.push(code.slice(1));
+  var tryOne=function(ix){if(ix>=alts.length){done(null);return;}fetch("https://world.openfoodfacts.org/api/v2/product/"+alts[ix]+".json?fields=product_name,product_name_de,brands,nutriments,serving_quantity,quantity,product_quantity").then(function(r){return r.json();}).then(function(j){
+    var pr=j&&j.status===1&&j.product,nu=pr&&pr.nutriments;if(!nu){tryOne(ix+1);return;}
     var k=+nu["energy-kcal_100g"];if(!(k>=0)&&+nu["energy_100g"]>=0)k=+nu["energy_100g"]/4.184;
     if(!(k>=0&&k<=950)){done(null);return;}
     var name=clean((pr.brands?String(pr.brands).split(",")[0]+" ":"")+(pr.product_name_de||pr.product_name||"Produkt "+code)),sq=nNum(pr.serving_quantity,1,2000);
     done({n:name,k:Math.round(k),p:+nu.proteins_100g||0,c:+nu.carbohydrates_100g||0,f:+nu.fat_100g||0,pg:sq||nPack(pr.quantity)||100,pl:sq?"Portion laut Packung":"100 g",pk:nPack(pr.quantity)});
-  }).catch(function(){ui.bar={msg:"Keine Verbindung zur Produktdatenbank. Prüfe das Internet oder trag es selbst ein."};renderSheet();barStart();});
+  }).catch(function(){ui.bar={msg:"Keine Verbindung zur Produktdatenbank. Prüfe das Internet oder trag es selbst ein."};renderSheet();barStart();});};
+  tryOne(0);
 }
 function nScale(x){var f=(x.g||x.g0)/x.g0;return {k:x.k0*f,p:x.p0*f,c:x.c0*f,f:x.f0*f};}
 function textHtml(){return '<div class="sh"><h2 id="sheet-t">Essen beschreiben</h2><button class="btn sm ghost" data-a="shut">Schließen</button></div><p class="m">Schreib, was und wie viel du gegessen hast. Claude schätzt die Nährwerte.</p><label class="vh" for="nt-in">Beschreibung</label><textarea id="nt-in" class="sumtxt" rows="4" placeholder="z. B. 2 Brötchen mit Nutella und ein Glas Milch"></textarea><button class="btn pri wide lg" data-a="ntgo">Schätzen lassen</button>';}
@@ -2992,13 +3035,14 @@ document.addEventListener("click",function(ev){
     nuSetDirty=true;ui.ngEdit=false;ui.ngf=null;bump();persist();render();toast("Ziel gespeichert");
   }
   else if(a==="nadapt"){var av=+t.getAttribute("data-v");NU.g.adj=av||null;NU.g.t=Date.now();nuSetDirty=true;bump();persist();render();toast(av?"Bedarf aus deinen Daten übernommen":"Bedarf wieder per Formel");}
-  else if(a==="nopen"){var mi=+t.getAttribute("data-m");ui.nf={m:mi>=0?mi:nDefMeal(),q:"",sel:null};openSheet("food");var q=$("nf-q");if(q)q.focus();}
+  else if(a==="nopen"){ui.rc=null;var mi=+t.getAttribute("data-m");ui.nf={m:mi>=0?mi:nDefMeal(),q:"",sel:null};openSheet("food");var q=$("nf-q");if(q)q.focus();}
   else if(a==="nfm"){ui.nf.m=+t.getAttribute("data-v");document.querySelectorAll('[data-a="nfm"]').forEach(function(b){b.setAttribute("aria-pressed",String(+b.getAttribute("data-v")===ui.nf.m));});}
   else if(a==="nfpick"){var L=nFoodList(ui.nf.q),x=L[+t.getAttribute("data-i")];if(!x)return;ui.nf.sel=x;ui.nf.g=x.pg;renderSheet();}
   else if(a==="nfback"){ui.nf.sel=null;renderSheet();}
   else if(a==="nfweb"){nOnline(String(ui.nf.q||"").trim());}
   else if(a==="nfai"){nAskFood(String(ui.nf.q||"").trim());}
   else if(a==="nfg"){ui.nf.g=+t.getAttribute("data-v");renderSheet();}
+  else if(a==="nfadd"&&ui.rc){var s0=ui.nf.sel,g0=nNum(num(($("nf-g")||{}).value),1,5000);if(!s0||!g0){toast("Bitte eine Menge in Gramm eingeben");return;}var r0=g0/100;ui.rc.items.push({n:s0.n,g:g0,k:s0.k*r0,p:s0.p*r0,c:s0.c*r0,f:s0.f*r0});ui.nf.sel=null;ui.nf.q="";renderSheet();toast(s0.n+" zum Rezept hinzugefügt");}
   else if(a==="nfadd"){
     var s=ui.nf.sel,g=nNum(num(($("nf-g")||{}).value),1,5000);if(!s||!g){toast("Bitte eine Menge in Gramm eingeben");return;}var r=g/100;
     nAddItems(d,ui.nf.m,[{n:s.n,g:g,k:s.k*r,p:s.p*r,c:s.c*r,f:s.f*r,s:"db"}]);ui.sheet=null;render();toast(s.n+" hinzugefügt");
@@ -3029,6 +3073,8 @@ document.addEventListener("click",function(ev){
 });
 document.addEventListener("input",function(ev){
   var t=ev.target;
+  if(t.id==="rc-n"&&ui.rc){ui.rc.n=t.value;return;}
+  if(t.id==="rc-p"&&ui.rc){ui.rc.por=Math.max(1,parseInt(t.value,10)||1);var tk=0;ui.rc.items.forEach(function(x){tk+=x.k;});var el=$("rc-sum");if(el&&ui.rc.items.length)el.textContent=NF0.format(tk)+" kcal gesamt · "+NF0.format(tk/ui.rc.por)+" pro Portion";return;}
   if(t.id==="nf-q"){ui.nf.q=t.value;var l=$("nf-list");if(l)l.innerHTML=nfListHtml(t.value);var nn=$("nm-n");if(nn)nn.value=t.value;}
   else if(t.id==="nf-g"&&ui.nf&&ui.nf.sel){var s=ui.nf.sel,g=num(t.value)||0,r=g/100,el=$("nf-res");ui.nf.g=g;if(el)el.textContent=NF0.format(s.k*r)+" kcal · E "+NF0.format(s.p*r)+" g · K "+NF0.format(s.c*r)+" g · F "+NF0.format(s.f*r)+" g";}
 });
