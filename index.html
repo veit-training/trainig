@@ -1400,7 +1400,27 @@ function saveEx(n){
   if(cur&&stable(cur.s)===stable(sets))return false;
   putEntry(n,d,sets);persist();return true;
 }
-function flushDrafts(){Object.keys(asT).forEach(function(n){clearTimeout(asT[n]);delete asT[n];saveEx(n);});}
+function flushDrafts(){Object.keys(asT).forEach(function(n){clearTimeout(asT[n]);delete asT[n];saveEx(n);});saveDraft();}
+/* Eingabestand des heutigen Trainings (auch nur kg, übersprungene und zusätzliche Sätze) sofort im Gerät sichern,
+   damit nach dem Schließen der App alles genau so wieder da ist. */
+var KD="trainings-tracker-draft";
+function saveDraft(){
+  if(ro||ui.tdate!==today())return;
+  if(!Object.keys(draft).length&&!Object.keys(extra).length){lsDel(KD);return;}
+  lsSet(KD,JSON.stringify({d:ui.tdate,k:ui.tkey,t:Date.now(),dr:draft,ex:extra}));
+}
+function loadDraft(){
+  try{
+    var o=JSON.parse(lsGet(KD)||"null");if(!o||o.d!==today()||ui.tdate!==o.d)return;
+    Object.keys(obj(o.dr)).forEach(function(n){
+      var rows=o.dr[n];if(!Array.isArray(rows)||draft[n])return;
+      draft[n]=rows.slice(0,20).map(function(r){return Array.isArray(r)?r.slice(0,5).map(function(v,i){return i===2?(v?1:0):(v==null?"":String(v).slice(0,10));}):["",""];});
+      /* Nur übernehmen, wenn die gespeicherten Sätze noch genau dazu passen (sonst wurde inzwischen woanders geändert) */
+      var cur=entryOn(n,o.d);if(stable(collect(n))!==stable(cur?cur.s:[]))delete draft[n];
+    });
+    Object.keys(obj(o.ex)).forEach(function(n){var e=+o.ex[n];if(e>=1&&e<=4&&draft[n])extra[n]=e;});
+  }catch(e){}
+}
 function kgStr(v){return v===null?"":String(v).replace(".",",");}
 function ensureDraft(n,it){
   if(!draft[n]){
@@ -3967,7 +3987,7 @@ function setDate(d){
   flushDrafts();
   ui.tdate=d&&DRE.test(d)&&d<=today()?d:today();
   ui.tkey=viewKey(ui.tdate);
-  ui.wkPick=false;ui.addOpen=null;draft={};extra={};
+  ui.wkPick=false;ui.addOpen=null;draft={};extra={};loadDraft();
 }
 function openDay(d){setDate(d);ui.view="t";ui.sheet=null;ui.cfg=null;}
 /* Einheit für einen Tag wählen und ins Training wechseln. Die Wahl wird gespeichert, damit sie nach einem Neustart noch da ist. */
@@ -4075,15 +4095,15 @@ document.addEventListener("click",function(ev){
   else if(a==="skip"){
     it=exList(k)[x];if(!it)return;n=it.n;var si=+t.getAttribute("data-i"),d=draft[n]||(draft[n]=[]),r=d[si]||["",""];
     r[2]=r[2]?0:1;d[si]=r;
-    clearTimeout(asT[n]);delete asT[n];saveEx(n);render();
+    clearTimeout(asT[n]);delete asT[n];saveEx(n);saveDraft();render();
   }
-  else if(a==="addset"){it=exList(k)[x];if(!it)return;if((extra[it.n]||0)<4){extra[it.n]=(extra[it.n]||0)+1;render();var fi=$("in-"+x+"-"+(it.s+extra[it.n]-1)+"-0");if(fi)fi.focus();}else toast("Mehr als 4 Zusatzsätze gehen nicht");}
-  else if(a==="rmset"){it=exList(k)[x];if(!it||!extra[it.n])return;n=it.n;if(draft[n])draft[n].length=Math.min(draft[n].length,it.s+extra[n]-1);extra[n]--;clearTimeout(asT[n]);delete asT[n];saveEx(n);render();}
+  else if(a==="addset"){it=exList(k)[x];if(!it)return;if(!draft[it.n])ensureDraft(it.n,it);if(!draft[it.n])draft[it.n]=[];if((extra[it.n]||0)<4){extra[it.n]=(extra[it.n]||0)+1;saveDraft();render();var fi=$("in-"+x+"-"+(it.s+extra[it.n]-1)+"-0");if(fi)fi.focus();}else toast("Mehr als 4 Zusatzsätze gehen nicht");}
+  else if(a==="rmset"){it=exList(k)[x];if(!it||!extra[it.n])return;n=it.n;if(draft[n])draft[n].length=Math.min(draft[n].length,it.s+extra[n]-1);extra[n]--;clearTimeout(asT[n]);delete asT[n];saveEx(n);saveDraft();render();}
   else if(a==="fill"){
     it=exList(k)[x];if(!it)return;n=it.n;var l=prevOf(n,ui.tdate),tot=it.s+(extra[n]||0),tg=targets(n,it,l,tot,lrShow(n));if(!tg)return;
     var dr=draft[n]||(draft[n]=[]),cf=0;
     for(var s=0;s<tot;s++){var tt=tg.t[s];if(!dr[s])dr[s]=["",""];if(dr[s][0]===""&&tt&&tt[0]!==null){dr[s][0]=kgStr(tt[0]);cf++;}if(tt&&tt.length>3&&tt[2]!==null&&tt[2]!==tt[0]&&!dr[s][3])dr[s][3]=kgStr(tt[2]);}
-    render();if(!cf)toast("Gewichte sind schon eingetragen");
+    saveDraft();render();if(!cf)toast("Gewichte sind schon eingetragen");
     for(var s2=0;s2<tot;s2++){var inp=$("in-"+x+"-"+s2+"-1");if(inp&&!inp.value&&!inp.disabled){inp.focus();break;}}
   }
   else if(a==="delset"){
@@ -4091,7 +4111,7 @@ document.addEventListener("click",function(ev){
     clearTimeout(asT[n]);delete asT[n];
     if(draft[n]&&draft[n].length>ds)draft[n].splice(ds,1);
     if(extra[n])extra[n]--;
-    saveEx(n);render();toast("Satz "+(ds+1)+" gelöscht");
+    saveEx(n);saveDraft();render();toast("Satz "+(ds+1)+" gelöscht");
   }
   /* Blatt „Anpassen“ */
   else if(a==="cfg"){flushDrafts();ui.cfg={k:t.getAttribute("data-k"),o:t.getAttribute("data-o")};ui.cfgSw=false;ui.rmArm=false;ui.clrArm=null;openSheet("cfg");}
@@ -4208,7 +4228,7 @@ document.addEventListener("click",function(ev){
 document.addEventListener("input",function(ev){
   var t=ev.target;if(!t.getAttribute||t.getAttribute("data-k")===null||t.getAttribute("data-x")===null)return;
   var x=+t.getAttribute("data-x"),s=+t.getAttribute("data-i"),kk=+t.getAttribute("data-k"),it=exList(curKey())[x];if(!it)return;
-  var n=it.n,d=draft[n]||(draft[n]=[]);if(!d[s])d[s]=["",""];d[s][kk]=t.value;
+  var n=it.n,d=draft[n]||(draft[n]=[]);if(!d[s])d[s]=["",""];d[s][kk]=t.value;saveDraft();
   if(t.value&&ui.tdate===today())startSess(ui.tdate);
   rowState(x,s);
   clearTimeout(asT[n]);asT[n]=setTimeout(function(){delete asT[n];saveEx(n);updDock();},700);
@@ -4336,6 +4356,7 @@ function importFile(f){
 if(APP){try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(function(){});}catch(e){}}
 /* Heutige Einheit wiederfinden; läuft gerade ein Training, geht es direkt dort weiter (z. B. nach einem Neustart der App im Gym). */
 ui.tkey=viewKey(ui.tdate);
+loadDraft();
 if(session&&session.d===today()&&ui.tkey)ui.view="t";
 render();
 try{var ts=JSON.parse(lsGet(KT)||"null");if(ts&&ts.end>Date.now()){tm={end:ts.end,total:ts.total||240000,label:ts.label||"Pause",done:false};startTimer();}else if(ts)lsDel(KT);}catch(e){}
