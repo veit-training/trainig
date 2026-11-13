@@ -4355,6 +4355,13 @@ function importFile(f){
 /* ---------- Start ---------- */
 if(APP){try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist().catch(function(){});}catch(e){}}
 /* Heutige Einheit wiederfinden; läuft gerade ein Training, geht es direkt dort weiter (z. B. nach einem Neustart der App im Gym). */
+/* Einmalig: Körper-Check vom 13.11.2026 übernehmen (auf Wunsch fest eingebaut). Ein Merker verhindert, dass eine gelöschte Messung wiederkommt. */
+(function(){
+  var F="trainings-tracker-ibseed1",d="2026-11-13";if(ro||lsGet(F))return;
+  if(!IB[d]){var v=cleanIbV({w:84,smm:42,fm:11.4,pbf:13.6,tbw:52.9,prot:14.6,mn:5.07,ffm:72.6,bmi:25.9,bmr:1937,vfl:4,ecw:.363,pa:7.5,ffmi:22.4,h:180,sl:[4.27,4.28,31.9,10.66,10.58],sp:[120.2,120.4,112.5,107.9,107.1],fk:[.4,.4,6.2,1.6,1.6],fp:[62.8,63.4,138.2,87.1,85.7]}),t=Date.now();
+    if(v){IB[d]={v:v,u:t};if(!BW[d]){BW[d]={v:84,u:t};IB[d].b=1;}bwDirty=true;saveLocal();}}
+  lsSet(F,"1");
+})();
 ui.tkey=viewKey(ui.tdate);
 loadDraft();
 if(session&&session.d===today()&&ui.tkey)ui.view="t";
