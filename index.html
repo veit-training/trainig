@@ -3143,6 +3143,8 @@ function goalForm(first){
   var bw0=w||80,rk=function(p){return Math.max(.05,Math.round(bw0*p/100/.05)*5/100);};
   var rates=f.mode==="cut"?[[rk(.5),"langsam · 0,5 %"],[rk(.75),"mittel · 0,75 %"],[rk(1),"schnell · 1 %"]]:f.mode==="bulk"?[[rk(.25),"sauber · 0,25 %"],[rk(.4),"mittel · 0,4 %"],[rk(.5),"schnell · 0,5 %"]]:[];
   if(rates.length&&!rates.some(function(r){return r[0]===f.rate;}))f.rate=rates[1][0];
+  /* Schlank laut Körper-Check: im Cut ist das langsame Tempo besser für die Muskeln (Helms et al. 2014) */
+  var ibl=ibLatest(120);if(f.mode==="cut"&&rates.length&&ibl&&ibl.v.pbf!=null&&ibl.v.pbf<(f.sex==="f"?23:15))rates[0][1]+=" · empfohlen";
   var h='<section class="card ngf"><div class="ch"><h2>'+(first?'Ernährungsziel festlegen':'Ziel ändern')+'</h2></div>'
     +(first?'<p class="m" style="margin:-4px 0 12px;font-size:14px">Damit rechne ich deinen Kalorienbedarf und deine Makros aus.</p>':'')
     +'<p class="lbl">Ziel</p><div class="seg sm" role="group" aria-label="Ziel">'+[["cut","Cut"],["keep","Halten"],["bulk","Bulk"]].map(function(x){return '<button data-a="ngf" data-k="mode" data-v="'+x[0]+'" aria-pressed="'+(f.mode===x[0])+'">'+x[1]+'</button>';}).join("")+'</div>'
@@ -4857,6 +4859,13 @@ if(APP){try{navigator.storage&&navigator.storage.persist&&navigator.storage.pers
 (function(){
   var F="trainings-tracker-ibseed2",d="2026-11-13";if(ro||lsGet(F))return;
   var e=IB[d];if(e&&e.v&&e.v.bmc==null&&e.v.w===84&&e.v.smm===42){var nv=cleanIbV(Object.assign({},e.v,{slm:68.4,bmc:4.16,bcm:48.3,se:[.372,.374,.362,.357,.362]}));if(nv){e.v=nv;e.u=Date.now();bwDirty=true;saveLocal();}}
+  lsSet(F,"1");
+})();
+/* Einmalig (15.11., Veits Wunsch nach dem Körper-Check): Cut-Tempo von 0,75 auf 0,4 kg pro Woche (≈ 0,5 % bei 13,6 % Körperfett).
+   Vorher lag das Ziel auf dem Minimum (= Grundumsatz). Einträge bleiben unverändert. */
+(function(){
+  var F="trainings-tracker-nuadj1",g=NU.g;if(ro||lsGet(F))return;
+  if(g&&g.mode==="cut"&&g.rate===.75&&g.pal===1.375){g.rate=.4;g.t=Date.now();nuSetDirty=true;saveLocal();}
   lsSet(F,"1");
 })();
 ui.tkey=viewKey(ui.tdate);
