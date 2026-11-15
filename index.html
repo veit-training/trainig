@@ -301,6 +301,41 @@ input.bad{border-color:var(--neg);color:var(--neg)}
 .nwtop b small{font-size:12px;font-weight:600;color:var(--mute)}
 .nwtop b.pos{color:var(--pos)}.nwtop b.neg{color:var(--neg)}/* Körper-Check */
 .pgsw{margin-bottom:2px}
+.pgsw button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px}
+.ibhead{background:radial-gradient(140% 100% at 0% 0%,color-mix(in srgb,var(--wacc) 10%,var(--raise)),var(--surface) 62%)}
+.ibmini{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;gap:4px 10px;align-items:center;width:100%;margin-top:12px;padding:11px 14px;border-radius:14px;border:1px solid var(--line);background:var(--raise);color:var(--ink);font:inherit;text-align:left;cursor:pointer}
+.ibmini .lbl{grid-column:1}
+.ibmv{grid-column:1;display:flex;gap:14px;flex-wrap:wrap}
+.ibmv b{font:700 18px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.ibmv b small{font:600 12px var(--f-body);color:var(--mute)}
+.ibma{grid-column:2;grid-row:1/3;font-size:22px;color:var(--mute)}
+.ibhr{display:flex;align-items:center;gap:16px}
+.ibring{flex:none;display:block}
+.ibring .rt{fill:none;stroke:var(--track);stroke-width:10}
+.ibring .rv{fill:none;stroke-width:10;stroke-linecap:round}
+.ibring .big{font:700 32px var(--f-display);fill:var(--ink)}
+.ibring .sm{font:600 11.5px var(--f-body);fill:var(--mute)}
+.ibk{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
+.ibk>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto auto;column-gap:8px;align-items:baseline;padding-bottom:7px;border-bottom:1px solid var(--line)}
+.ibk>div:last-child{border-bottom:0;padding-bottom:0}
+.ibk .lbl{grid-column:1/-1}
+.ibk b{font:700 22px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.ibk b small{font-size:12px;font-weight:600;color:var(--mute)}
+.ibk .dl{font-size:12.5px;font-weight:700}
+.ibimp{border-color:color-mix(in srgb,var(--warn) 35%,var(--line))}
+.ibimp .ibins li.w>span{font-size:12.5px}
+.ibg small{font-size:13px}
+.ibgo{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.ibgo>div{display:flex;flex-direction:column;gap:3px;padding:12px 10px;border-radius:14px;background:var(--raise);min-width:0}
+.ibgo>div:first-child{background:color-mix(in srgb,var(--pos) 12%,var(--raise))}
+.ibgo b{font:700 22px/1.1 var(--f-display);font-variant-numeric:tabular-nums}
+.ibgo b small{font-size:12px;color:var(--mute)}
+.ibgo>div>small{font-size:12px;color:var(--mute);white-space:nowrap}
+.ibwat{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.ibwat>div{display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 2px;border-radius:12px;background:var(--raise);min-width:0}
+.ibwat span{font-size:11px;color:var(--mute);white-space:nowrap}
+.ibwat b{font:700 15px var(--f-display);font-variant-numeric:tabular-nums}
+.ibwat b.pos{color:var(--pos)}.ibwat b.warn{color:var(--warn)}.ibwat b.neg{color:var(--neg)}
 .ibdates{display:flex;gap:6px;overflow-x:auto;margin:-4px 0 12px;padding-bottom:2px;scrollbar-width:none}
 .ibdates .chip{flex:none}
 .ibhead .tile.mt .tv{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 6px}
@@ -1306,13 +1341,15 @@ function cleanBm(src){
 /* Körper-Check (InBody): pro Datum {v: Messwerte oder null (gelöscht), u: Zeitstempel}. Segmente je [rechter Arm, linker Arm, Rumpf, rechtes Bein, linkes Bein] */
 var IBF=[["w","Gewicht","kg",20,400],["smm","Skelettmuskelmasse","kg",5,150],["fm","Körperfettmasse","kg",.5,250],["pbf","Körperfett","%",2,75],
   ["tbw","Körperwasser","l",5,150],["prot","Proteine","kg",1,50],["mn","Mineralien","kg",.5,15],["ffm","Fettfreie Masse","kg",10,200],
-  ["bmi","BMI","kg/m²",10,80],["bmr","Grundumsatz","kcal",600,5000],["vfl","Viszeraler Fettlevel","Level",1,30],["ecw","EZW/GKW","",.3,.5],["pa","Phasenwinkel","°",1,20],["ffmi","FFMI","kg/m²",8,40],["h","Größe","cm",100,250]];
+  ["bmi","BMI","kg/m²",10,80],["bmr","Grundumsatz","kcal",600,5000],["vfl","Viszeraler Fettlevel","Level",1,30],["ecw","EZW/GKW","",.3,.5],["pa","Phasenwinkel","°",1,20],["ffmi","FFMI","kg/m²",8,40],["h","Größe","cm",100,250],
+  ["slm","Weiche Magermasse","kg",10,200],["bmc","Knochenmineralgehalt","kg",.5,10],["bcm","Körperzellmasse","kg",10,120]];
 var IBS=[["ra","Rechter Arm"],["la","Linker Arm"],["tr","Rumpf"],["rl","Rechtes Bein"],["ll","Linkes Bein"]];
-var IBA=[["sl",0,60],["sp",20,250],["fk",0,60],["fp",10,900]];
+/* sl/sp: Muskeln je Körperteil (kg/%), fk/fp: Fett je Körperteil (kg/%), se: Wasserverhältnis EZW/GKW je Körperteil */
+var IBA=[["sl",0,60],["sp",20,250],["fk",0,60],["fp",10,900],["se",.3,.5]];
 function cleanIbV(v){
   v=obj(v);var o={},any=false;
   IBF.forEach(function(f){var r=v[f[0]],x=+r;if(r!=null&&r!==""&&isFinite(x)&&x>=f[3]&&x<=f[4]){o[f[0]]=Math.round(x*1000)/1000;if(f[0]!=="h")any=true;}});
-  IBA.forEach(function(a){var s=v[a[0]];if(!Array.isArray(s))return;var r=[0,1,2,3,4].map(function(i){var y=s[i],x=+y;return y!=null&&y!==""&&isFinite(x)&&x>=a[1]&&x<=a[2]?Math.round(x*100)/100:null;});if(r.some(function(x){return x!==null;}))o[a[0]]=r;});
+  IBA.forEach(function(a){var s=v[a[0]];if(!Array.isArray(s))return;var r=[0,1,2,3,4].map(function(i){var y=s[i],x=+y;return y!=null&&y!==""&&isFinite(x)&&x>=a[1]&&x<=a[2]?Math.round(x*1000)/1000:null;});if(r.some(function(x){return x!==null;}))o[a[0]]=r;});
   return any&&o.w!=null?o:null;
 }
 function cleanIb(src){
@@ -2239,36 +2276,44 @@ function showRankUp(label,st,more){
    die zu einer glatten Oberfläche verschmelzen. Jeder Muskel hat eine Nummer und bekommt seine Farbe
    erst beim Zeichnen (Rang oder Erholung). Maße in Metern, y zeigt nach oben, z nach vorn. */
 var B3=(function(){
-  var H=0.011,X1=0.47,Y0=-0.03,Y1=1.83,Z0=-0.21,Z1=0.21;
+  var H=0.0095,X1=0.47,Y0=-0.03,Y1=1.83,Z0=-0.21,Z1=0.21;
   var hx=Math.ceil(X1/H)+1,ny=Math.ceil((Y1-Y0)/H)+1,nz=Math.ceil((Z1-Z0)/H)+1,nx=2*hx-1;
   /* Muskel-Nummern: 1 Brust, 2 Lat, 3 oberer Rücken, 4 unterer Rücken, 5 vordere, 6 seitliche, 7 hintere Schulter,
      8 Bizeps, 9 Trizeps, 10 Unterarm, 11 Bauch, 12 Quadrizeps, 13 Beinbeuger, 14 Gesäß, 15 Waden. 0 = Körper. */
   /* Ellipsoid: ["e",Nr,Übergang, Mitte x,y,z, Radius x,y,z, Neigung seitlich°, Neigung vor/zurück°]
      Kegelstumpf mit runden Enden: ["c",Nr,Übergang, Anfang x,y,z, Ende x,y,z, Radius Anfang, Radius Ende] */
   var PRIMS=[
-    ["e",0,.02, 0,1.688,.008, .079,.104,.092],
-    ["e",0,.03, 0,1.632,.028, .060,.064,.064],
-    ["e",0,.012, 0,1.652,.097, .011,.020,.014],
-    ["c",0,.03, 0,1.48,-.012, 0,1.61,.004, .055,.050],
-    ["e",0,.05, 0,1.30,-.005, .158,.190,.105],
-    ["e",0,.05, .100,1.425,-.012, .115,.058,.075],
-    ["e",0,.06, 0,1.10,0, .130,.140,.088],
-    ["e",0,.07, 0,.955,-.005, .152,.100,.098],
-    ["c",0,.03, .210,1.430,-.005, .285,1.165,-.015, .050,.040],
-    ["c",0,.02, .285,1.165,-.015, .345,.925,.035, .040,.027],
-    ["e",0,.02, .360,.850,.050, .026,.065,.038, 12,-10],
-    ["c",0,.06, .098,.900,-.005, .103,.505,0, .096,.055],
-    ["c",0,.03, .103,.505,0, .108,.085,-.010, .052,.034],
-    ["e",0,.02, .103,.505,.045, .036,.045,.022],
-    ["e",0,.03, .112,.032,.058, .044,.034,.108],
-    ["e",0,.03, .108,.040,-.030, .035,.040,.040],
+    /* Kopf: Schädel, Gesicht mit Kiefer, Kinn, Nase, Ohren */
+    ["e",0,.02, 0,1.700,-.004, .074,.098,.088],
+    ["e",0,.03, 0,1.636,.026, .058,.058,.062],
+    ["e",0,.015, 0,1.598,.052, .030,.020,.026],
+    ["e",0,.012, 0,1.660,.090, .010,.022,.016],
+    ["e",0,.01, .074,1.668,-.006, .010,.026,.018],
+    ["c",0,.03, 0,1.47,-.014, 0,1.61,-.002, .066,.057],
+    /* Rumpf: Brustkorb, Schultergürtel, Taille, Becken */
+    ["e",0,.05, 0,1.30,-.005, .156,.190,.104],
+    ["e",0,.05, .100,1.428,-.014, .112,.056,.072],
+    ["e",0,.06, 0,1.10,0, .124,.140,.086],
+    ["e",0,.07, 0,.960,-.008, .132,.095,.092],
+    /* Arme mit Hand, Fingern und Daumen */
+    ["c",0,.03, .205,1.432,-.008, .280,1.170,-.016, .052,.043],
+    ["c",0,.025, .280,1.170,-.016, .338,.935,.030, .046,.029],
+    ["e",0,.02, .350,.868,.042, .019,.052,.040, 12,-8],
+    ["e",0,.015, .356,.815,.046, .016,.038,.032, 12,-8],
+    ["e",0,.01, .338,.885,.074, .012,.028,.012, 20,-15],
+    /* Beine mit Knie und Fuß */
+    ["c",0,.06, .088,.905,-.006, .098,.505,0, .080,.054],
+    ["c",0,.03, .100,.505,0, .106,.090,-.012, .052,.032],
+    ["e",0,.02, .100,.505,.040, .034,.042,.022],
+    ["c",0,.02, .106,.045,-.040, .114,.028,.085, .036,.026],
+    ["e",0,.02, .108,.065,.010, .032,.035,.052],
     /* Brust */
     ["e",1,.02, .088,1.322,.066, .096,.070,.034, 10,0],
     ["e",1,.02, .102,1.385,.058, .082,.036,.032, 16,0],
     /* Schultern: vorn, seitlich, hinten */
-    ["e",5,.01, .194,1.432,.030, .046,.062,.042, 8,0],
-    ["e",6,.01, .238,1.432,-.004, .040,.070,.048, 14,0],
-    ["e",7,.01, .200,1.428,-.042, .048,.056,.036, 8,0],
+    ["e",5,.014, .188,1.412,.030, .042,.064,.038, 12,0],
+    ["e",6,.014, .228,1.405,-.004, .034,.076,.044, 20,0],
+    ["e",7,.014, .194,1.410,-.040, .044,.058,.034, 12,0],
     /* Arme */
     ["e",8,.01, .247,1.300,.018, .034,.090,.036, 15.5,-2],
     ["e",9,.012, .255,1.305,-.036, .036,.098,.034, 15.5,0],
@@ -2284,16 +2329,16 @@ var B3=(function(){
     ["e",11,.005, .115,1.120,.036, .032,.090,.060, -6,0],
     ["e",11,.005, .142,1.245,.030, .022,.050,.050],
     /* Rücken */
-    ["e",2,.02, .112,1.215,-.060, .080,.165,.034, -13,0],
+    ["e",2,.02, .098,1.215,-.074, .076,.165,.030, -13,0],
     ["e",2,.02, .155,1.340,-.058, .052,.062,.038],
-    ["e",3,.02, .078,1.492,-.030, .088,.034,.044, -20,0],
+    ["e",3,.02, .075,1.505,-.026, .085,.032,.046, -24,0],
     ["e",3,.02, .045,1.400,-.094, .050,.100,.020],
     ["e",3,.02, .125,1.385,-.088, .055,.045,.020],
-    ["c",4,.008, .035,.985,-.070, .040,1.210,-.082, .028,.028],
+    ["e",4,.01, .034,1.075,-.074, .028,.095,.022],
     /* Beine */
-    ["e",14,.008, .086,.930,-.068, .088,.085,.068],
+    ["e",14,.012, .072,.930,-.058, .070,.076,.050],
     ["e",12,.012, .098,.730,.050, .046,.170,.040],
-    ["e",12,.012, .150,.700,.012, .040,.165,.055],
+    ["e",12,.012, .140,.700,.012, .036,.165,.052],
     ["e",12,.012, .064,.600,.035, .036,.080,.040],
     ["e",12,.012, .048,.800,-.002, .040,.120,.060],
     ["e",13,.008, .128,.700,-.048, .040,.170,.042],
@@ -2411,7 +2456,7 @@ var B3=(function(){
         var occ=0;
         [[.012,.5],[.03,.3],[.065,.2]].forEach(function(s){var fv=tri(Fh,wx+gx*s[0],wy+gy*s[0],wz+gz*s[0]);occ+=Math.max(0,(s[0]-fv)/s[0])*s[1];});
         cell[a]=nv++;
-        V.push(wx,wy,wz,gx,gy,gz,IM[hq],mixv,Math.max(0,1-occ*1.6)*(1-mixv*(1-edge)*.6));
+        V.push(wx,wy,wz,gx,gy,gz,IM[hq],mixv,Math.max(0,1-occ*1.4)*(1-mixv*(1-edge)*.4));
       }
     }
     function quad(p,q,r,s,flip){if(p<0||q<0||r<0||s<0)return;if(flip)I.push(p,s,r,p,r,q);else I.push(p,q,r,p,r,s);}
@@ -2434,7 +2479,7 @@ var B3=(function(){
   var FS="precision mediump float;varying vec3 vN;varying vec3 vC;varying vec2 vD;uniform vec3 uK;uniform vec3 uF;uniform vec3 uRim;uniform vec3 uL;"
     +"void main(){vec3 n=normalize(vN);float k=max(dot(n,uK),0.0),f=max(dot(n,uF),0.0);"
     +"float rim=pow(1.0-max(n.z,0.0),2.6);vec3 h=normalize(uK+vec3(0.0,0.0,1.0));float sp=pow(max(dot(n,h),0.0),36.0);"
-    +"float ao=mix(0.3,1.0,vD.x);"
+    +"float ao=mix(0.42,1.0,vD.x);"
     +"vec3 c=vC*(uL.x+uL.y*k+0.28*f)*ao+vC*vD.y+vec3(sp*uL.z)*ao+uRim*rim*ao;"
     +"gl_FragColor=vec4(c,1.0);}";
   var cv=null,gl=null,prog=null,loc={},bufV=null,bufI=null,i32=false,dead=false;
@@ -2502,7 +2547,7 @@ var B3=(function(){
     }else if(Math.abs(st.vel)>.02){st.yaw+=st.vel*dt;st.vel*=Math.pow(.04,dt);moving=true;st.base=st.yaw;st.idle=now;}
     else if(st.sway&&!RM){
       /* sanftes Hin- und Herdrehen um die zuletzt gewählte Ansicht */
-      var ph=(now-st.idle)/1000;st.yaw=st.base+.42*Math.sin(ph*.55)*Math.min(1,ph/1.5);moving=true;
+      var ph=(now-st.idle)/1000;st.yaw=st.base+.2*Math.sin(ph*.4)*Math.min(1,ph/3);moving=true;
     }
     if(moving||st.dirty||st.sel){st.dirty=false;draw();}
     if(st.on&&(moving||st.sel&&!RM))st.raf=requestAnimationFrame(frame);
@@ -2591,6 +2636,7 @@ var B3=(function(){
     }
   };
 })();
+try{if(location.hostname==="localhost"){window.__B3=B3;window.__fo=function(m){return figOpts(m);};}}catch(e){}
 /* ---------- Anzeige: Grundgerüst ---------- */
 var toastT=null;
 function toast(t){var el=$("toast");el.textContent=t;el.classList.add("on");clearTimeout(toastT);toastT=setTimeout(function(){el.classList.remove("on");},2400);}
@@ -2603,7 +2649,7 @@ var TABS=[["h","Home","home"],["t","Training","train"],["p","Plan","plan"],["e",
 function renderTabs(){
   var nav=$("tabs");
   if(!nav.children.length)nav.innerHTML=TABS.map(function(v){return '<button data-a="view" data-v="'+v[0]+'"><span class="tbi">'+svgI(v[2],22)+'</span>'+v[1]+'</button>';}).join("");
-  [].forEach.call(nav.children,function(b){if(b.getAttribute("data-v")===(ui.view==="k"?"s":ui.view))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
+  [].forEach.call(nav.children,function(b){if(b.getAttribute("data-v")===(ui.view==="k"?"e":ui.view))b.setAttribute("aria-current","page");else b.removeAttribute("aria-current");});
 }
 /* Seitenwechsel: alte und neue Ansicht blenden weich ineinander über (wo der Browser das kann), sonst sanftes Einblenden. */
 var RMQ=false,inNav=false;try{RMQ=window.matchMedia("(prefers-reduced-motion: reduce)").matches;}catch(e){}
@@ -2615,7 +2661,7 @@ function nav(fn,dir){
   /* Sicherheitsnetz: Kommt der Browser nicht zum Überblenden, wird trotzdem sofort gewechselt. */
   setTimeout(run,160);
 }
-function tabIx(v){if(v==="k")return TABS.length;for(var i=0;i<TABS.length;i++)if(TABS[i][0]===v)return i;return 0;}
+function tabIx(v){if(v==="k")return 3.5;for(var i=0;i<TABS.length;i++)if(TABS[i][0]===v)return i;return 0;}
 function render(){
   needRender=false;
   renderTabs();
@@ -3040,6 +3086,7 @@ function nItemRow(it,mi,ii){
 function nDays7(){var o=[],td=today();for(var i=6;i>=0;i--){var d=add(td,-i);o.push({d:d,s:nSum(d)});}return o;}
 function rFood(){
   var d=ui.nd||today(),td=today(),T=nTargets(),h=vhead("Ernährung",esc(relDay(d)||longDate(d)));
+  h+=foodSw("e");
   h+='<div class="datebar"><button class="btn" data-a="nstep" data-v="-1" aria-label="Vorheriger Tag">‹</button><div class="dtmid"><b>'+(relDay(d)||WD[P(d).getDay()]+', '+fmt(d))+'</b><small>'+esc(longDate(d))+'</small></div><button class="btn" data-a="nstep" data-v="1" aria-label="Nächster Tag"'+(d>=td?' disabled':'')+'>›</button></div>';
   if(APP)setTimeout(function(){zxing().catch(function(){});},1200);
   if(!T)return h+goalForm(true);
@@ -3472,6 +3519,11 @@ function ibInsights(v,R){
   if(sl){var side=[];[[0,1,"Arme"],[3,4,"Beine"]].forEach(function(q){var a=sl[q[0]],c2=sl[q[1]];if(a!=null&&c2!=null){var df=Math.abs(a-c2)/Math.max(a,c2)*100;if(df>=5)side.push(q[2]+" ("+(a>c2?"rechts":"links")+" "+Math.round(df)+" % mehr)");}});
     if(side.length){W.push(["Seitenunterschied",side.join(", ")+". Etwas Unterschied ist normal, ab 5 % lohnt es sich gegenzusteuern."]);T.push("Die schwächere Seite mit Kurzhanteln oder einarmig bzw. einbeinig trainieren und mit ihr beginnen. Die stärkere Seite macht nur so viele Wiederholungen wie die schwächere.");}
     else if(sl[0]!=null&&sl[1]!=null)G.push(["Links und rechts ausgeglichen","Arme und Beine unterscheiden sich um weniger als 5 %."]);}
+  if(v.se){var hiS=IBS.filter(function(b,i){return v.se[i]!=null&&v.se[i]>.39;}).map(function(b){return b[1];});if(hiS.length)W.push(["Wasser eingelagert: "+hiS.join(", "),"EZW/GKW über 0,390. Oft nach hartem Training, Verletzung oder viel Salz. Ausgeruht neu messen."]);}
+  /* Passt das Zielgewicht von der Essen-Seite zur fettfreien Masse? */
+  var g0=NU.g;
+  if(g0&&g0.tw&&g0.mode==="cut"&&v.ffm!=null&&g0.tw<v.w){var pAt=r1((1-v.ffm/g0.tw)*100),mn0=f?16:8,tg0=f?20:11,tw0=r1(v.ffm/(1-tg0/100));
+    if(pAt<mn0){W.unshift(["Zielgewicht "+nf(g0.tw)+" kg ist zu niedrig","Bei deiner fettfreien Masse wären das nur etwa "+nf(Math.max(0,pAt))+" % Körperfett. Für "+(f?"eine definierte Figur":"sichtbare Bauchmuskeln")+" reichen etwa "+nf(tw0)+" kg ("+tg0+" %)."]);T.unshift("Zielgewicht auf der Essen-Seite auf etwa "+nf(tw0)+" kg setzen. Tiefer geht nur mit Muskelverlust.");}}
   if(v.fp&&v.fp[2]!=null&&v.fp[2]>=120)W.push(["Fett sitzt vor allem am Bauch","Rumpf "+Math.round(v.fp[2])+" % vom Normwert"+(v.fp[3]!=null?", Beine "+Math.round(v.fp[3])+" %":"")+". Bei Männern typisch: Bauchfett geht beim Abnehmen zuletzt. Bauchübungen allein verbrennen dort kein Fett."]);
   /* Tipps mit Zahlen */
   if(v.pbf!=null&&v.ffm!=null){var tg=f?20:11;
@@ -3479,7 +3531,37 @@ function ibInsights(v,R){
     else if(v.pbf<=tg+1.5&&v.pbf>=(f?16:8))T.unshift("Du bist schon definiert. Für mehr Muskeln ein kleiner Überschuss (ca. +250 kcal am Tag, Essen-Seite „Bulk“, langsam) bringt Muskeln bei wenig Fett.");}
   T.push("Eiweiß: etwa "+Math.round(v.w*2)+" g am Tag (2 g pro kg). Das schützt die Muskeln in der Diät und hilft beim Aufbau.");
   T.push("Nächste Messung in 4–5 Wochen, zur gleichen Tageszeit, nüchtern, vor dem Training und nach dem Toilettengang. Sonst schwanken die Werte um 1–2 %.");
-  return {G:G,W:W,T:T.slice(0,4)};
+  return {G:G,W:W,T:T.slice(0,5)};
+}
+/* Körper-Score 0–100 (eigene Rechnung, kein InBody-Wert): Fett 35, Muskeln 30, Bauchinnenfett 10, Phasenwinkel 10, Wasser 5, Balance 10 */
+function ibScore(v,R){
+  var s=0,m=0,lin=function(x,a,b){return Math.max(0,Math.min(1,(x-a)/(b-a)));},f=R.f;
+  if(v.pbf!=null){var p=v.pbf,lo=f?18:10,hi=f?24:15;s+=35*(p<lo?lin(p,f?12:5,lo):p>hi?1-lin(p,hi,f?38:30):1);m+=35;}
+  if(v.smm!=null){s+=30*lin(v.smm/R.ms,.8,1.1);m+=30;}
+  if(v.vfl!=null){s+=10*(v.vfl<10?1:Math.max(0,1-(v.vfl-9)/5));m+=10;}
+  if(v.pa!=null){s+=10*lin(v.pa,f?3.5:4,f?6:7);m+=10;}
+  if(v.ecw!=null){s+=5*(v.ecw<=.39?1:Math.max(0,1-(v.ecw-.39)/.02));m+=5;}
+  if(v.sp&&v.sp[0]!=null&&v.sp[3]!=null){var dd=Math.abs((v.sp[0]+(v.sp[1]||v.sp[0]))/2-(v.sp[3]+(v.sp[4]||v.sp[3]))/2);s+=10*(1-lin(dd,5,25));m+=10;}
+  if(m<50)return null;var sc=Math.round(s/m*100);
+  return {s:sc,l:sc>=90?"Top":sc>=75?"Sehr gut":sc>=60?"Gut":sc>=45?"Mittel":"Ausbaufähig"};
+}
+function ibRing(sc){
+  var r=46,c=2*Math.PI*r,p=sc.s/100;
+  return '<svg class="ibring" width="112" height="112" viewBox="0 0 112 112" role="img" aria-label="Körper-Score '+sc.s+' von 100, '+sc.l+'"><defs><linearGradient id="ibrg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--wacc)"/><stop offset="1" style="stop-color:var(--pos)"/></linearGradient></defs><circle class="rt" cx="56" cy="56" r="'+r+'"/><circle class="rv" cx="56" cy="56" r="'+r+'" style="stroke:url(#ibrg)" stroke-dasharray="'+(p*c).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 56 56)"/><text x="56" y="58" text-anchor="middle" class="big">'+sc.s+'</text><text x="56" y="76" text-anchor="middle" class="sm">'+sc.l+'</text></svg>';
+}
+/* Was wäre bei 12 / 11 / 10 % Körperfett? Gewicht bei gleicher fettfreier Masse */
+function ibGoalCard(v,R){
+  if(v.ffm==null||v.pbf==null)return '';var f=R.f,tg=f?[24,22,20]:[12,11,10],g=NU.g,h='';
+  var cols=tg.map(function(t){var w=r1(v.ffm/(1-t/100)),lose=r1(v.w-w),wk=lose>0?Math.ceil(lose/(v.w*.005)):0;return {t:t,w:w,l:lose,wk:wk};}).filter(function(x){return x.t<v.pbf;});
+  if(!cols.length)return '';
+  h+='<section class="card"><div class="ch"><h2>'+(f?'Dein Weg zur Definition':'Dein Weg zum Sixpack')+'</h2><span class="m">Muskeln bleiben gleich</span></div><div class="ibgo">'+cols.map(function(x){return '<div><span class="lbl">'+x.t+' % Fett</span><b>'+nf(x.w)+'<small> kg</small></b><small>−'+nf(x.l)+' kg · ~'+x.wk+' Wo</small></div>';}).join("")+'</div>';
+  if(g&&g.tw)h+='<p class="m nline">Dein Ziel auf der Essen-Seite: <b>'+nf(g.tw)+' kg</b> ≈ '+nf(Math.max(0,r1((1-v.ffm/g.tw)*100)))+' % Körperfett.</p>';
+  return h+'<p class="m nline">Tempo: 0,5 % des Gewichts pro Woche, damit die Muskeln bleiben.</p></section>';
+}
+/* Wasser je Körperteil (EZW/GKW) */
+function ibWater(v){
+  if(!v.se)return '';
+  return '<p class="lbl" style="margin:16px 0 8px">Wasserhaushalt je Körperteil</p><div class="ibwat">'+IBS.map(function(b,i){var x=v.se[i];if(x==null)return '';var c=x<=.38?"pos":x<=.39?"warn":"neg";return '<div><span>'+b[1].replace("Rechter ","R. ").replace("Linker ","L. ").replace("Rechtes ","R. ").replace("Linkes ","L. ")+'</span><b class="'+c+'">'+String(x).replace(".",",")+'</b></div>';}).join("")+'</div>';
 }
 /* Balken mit Normbereich wie im InBody-Bericht; good: "up" = mehr ist gut, "mid" = Normbereich ist gut, "down" = weniger ist gut */
 function ibBar(lbl,val,lo,hi,unit,good){
@@ -3512,10 +3594,10 @@ function ibDelta(a,b,unit,good,dec){
   var cl=d===0||!good?"m":(d>0)===(good==="up")?"pos":"neg";
   return '<span class="dl '+cl+'">'+(d>0?'+':d<0?'−':'±')+nf(Math.abs(d))+(unit?' '+unit:'')+'</span>';
 }
-var IBGL=[["Skelettmuskelmasse (SMM)","Die Muskeln, die du trainierst. Wichtigster Wert für Kraft und Form."],["Körperfettmasse","Gesamtes Fett im Körper in kg. Körperfett % = Fettmasse geteilt durch Gewicht."],["Fettfreie Masse","Alles außer Fett: Muskeln, Organe, Knochen, Wasser."],["FFMI","Fettfreie Masse geteilt durch Größe². Zeigt, wie muskulös du für deine Größe bist."],["Viszeraler Fettlevel","Fett im Bauchraum um die Organe. Unter 10 ist gesund."],["EZW/GKW","Anteil des Wassers außerhalb der Zellen. 0,360–0,390 ist normal, höher deutet auf Wassereinlagerung hin."],["Phasenwinkel","Wie gesund und kräftig die Zellen sind. Höher ist besser, steigt mit Muskeln und Fitness."],["Segmente in %","100 % = Normwert für deine Größe und dein Gewicht. Über 100 % heißt mehr als der Durchschnitt."],["Grundumsatz","Kalorien, die dein Körper in Ruhe verbraucht. Die Essen-Seite nutzt deine Messung dafür."]];
+var IBGL=[["Skelettmuskelmasse (SMM)","Die Muskeln, die du trainierst. Wichtigster Wert für Kraft und Form."],["Körperfettmasse","Gesamtes Fett im Körper in kg. Körperfett % = Fettmasse geteilt durch Gewicht."],["Fettfreie Masse","Alles außer Fett: Muskeln, Organe, Knochen, Wasser."],["FFMI","Fettfreie Masse geteilt durch Größe². Zeigt, wie muskulös du für deine Größe bist."],["Viszeraler Fettlevel","Fett im Bauchraum um die Organe. Unter 10 ist gesund."],["EZW/GKW","Anteil des Wassers außerhalb der Zellen. 0,360–0,390 ist normal, höher deutet auf Wassereinlagerung hin."],["Phasenwinkel","Wie gesund und kräftig die Zellen sind. Höher ist besser, steigt mit Muskeln und Fitness."],["Segmente in %","100 % = Normwert für deine Größe und dein Gewicht. Über 100 % heißt mehr als der Durchschnitt."],["Grundumsatz","Kalorien, die dein Körper in Ruhe verbraucht. Die Essen-Seite nutzt deine Messung dafür."],["Körperzellmasse","Alle aktiven, stoffwechselnden Zellen (vor allem Muskeln und Organe). Mehr ist besser."],["Knochenmineralgehalt","Mineralien in den Knochen. Krafttraining, Kalzium und Vitamin D halten sie stark."],["Körper-Score","Eigene Rechnung der App, kein InBody-Wert: Körperfett (35 Punkte), Muskeln (30), Bauchinnenfett (10), Phasenwinkel (10), Wasser (5) und Balance zwischen Armen und Beinen (10)."]];
 function rBody(){
-  var L=ibList(),h=vhead("Körper-Check","Statistik");
-  h+=statSw("k");
+  var L=ibList(),h=vhead("Körper-Check","Essen");
+  h+=foodSw("k");
   if(!L.length){
     h+='<section class="card"><div class="ch"><h2>Was ist der Körper-Check?</h2></div><p class="m" style="margin:0 0 12px;font-size:14.5px">Trag hier alle 4–5 Wochen deine Körperanalyse ein (z. B. InBody im Studio). Die App zeigt dir, wo du stehst, was gut ist, wo deine Schwachstellen sind und wie du dich veränderst.</p>'
       +(ro?'':'<button class="btn pri wide lg" data-a="ibnew">Erste Messung eintragen</button>')+'</section>';
@@ -3526,9 +3608,23 @@ function rBody(){
   /* Kopf: Datum, Körpertyp, drei Kernwerte */
   h+='<section class="card ibhead"><div class="ch"><h2>'+esc(longDate(sel))+'</h2>'+(ro?'':'<button class="lnk" data-a="ibedit" data-d="'+sel+'">Bearbeiten</button>')+'</div>';
   if(L.length>1)h+='<div class="altrow ibdates" data-sx="ibd">'+L.map(function(x){return '<button class="chip'+(x.d===sel?' on':'')+'" data-a="ibsel" data-d="'+x.d+'">'+fmtY(x.d)+'</button>';}).join("")+'</div>';
-  h+='<div class="tiles3">'+mtile("Muskeln",(v.smm!=null?nf(v.smm)+'<small> kg</small>':'–')+(pv?ibDelta(pv.smm,v.smm,"","up"):''))+mtile("Körperfett",(v.pbf!=null?nf(v.pbf)+'<small> %</small>':'–')+(pv?ibDelta(pv.pbf,v.pbf,"","down"):''))+mtile("Gewicht",nf(v.w)+'<small> kg</small>'+(pv?ibDelta(pv.w,v.w,"",null):''))+'</div>';
+  var sc=ibScore(v,R);
+  h+='<div class="ibhr">'+(sc?ibRing(sc):'')+'<div class="ibk">'+[["Muskeln",v.smm,"kg","up","smm"],["Körperfett",v.pbf,"%","down","pbf"],["Gewicht",v.w,"kg",null,"w"]].map(function(r){return '<div><span class="lbl">'+r[0]+'</span><b>'+(r[1]!=null?nf(r[1])+'<small> '+r[2]+'</small>':'–')+'</b>'+(pv?ibDelta(pv[r[4]],r[1],"",r[3]):'')+'</div>';}).join("")+'</div></div>';
   if(ty)h+='<p class="ibty"><span class="tag">'+ty[0]+'</span> '+esc(ty[1])+'</p>';
-  h+='<p class="m nline">'+(sel!==last?'Ältere Messung. ':'')+(td>=due?'<b class="warnc">Neue Messung fällig</b> (letzte vor '+Math.round((P(td)-P(last))/864e5)+' Tagen).':'Nächste Messung ab '+fmt(due)+' empfohlen.')+'</p></section>';
+  var TPn=nTrendPts(),lt=TPn[TPn.length-1];
+  if(lt&&lt.d>sel&&sel===last){var dw=r1(lt.t-v.w);h+='<p class="m nline">Gewicht heute (Trend): <b>'+nf(lt.t)+' kg</b>, '+(dw>0?'+':dw<0?'−':'±')+nf(Math.abs(dw))+' kg seit der Messung.</p>';}
+  h+='<p class="m nline">'+(sel!==last?'Ältere Messung. ':'')+(td>=due?'<b class="warnc">Neue Messung fällig</b> (letzte vor '+Math.round((P(td)-P(last))/864e5)+' Tagen).':'Nächste Messung ab '+fmt(due))+'</p></section>';
+  h+=nuMini();
+  /* Was du verbessern kannst: Baustellen und konkrete Schritte zuerst */
+  if(I.W.length||I.T.length){
+    h+='<section class="card ibimp"><div class="ch"><h2>Deine Baustellen</h2><span class="m">'+(I.W.length?I.W.length+' Punkte':'keine')+'</span></div>';
+    if(I.W.length)h+='<ul class="ibins">'+I.W.map(function(x,i){return '<li class="w"><span>'+(i+1)+'</span><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div></li>';}).join("")+'</ul>';
+    h+='<p class="lbl" style="margin:16px 0 8px">So gehst du es an</p><ol class="ibtodo">'+I.T.map(function(t){return '<li>'+esc(t)+'</li>';}).join("")+'</ol></section>';
+  }
+  if(I.G.length)h+='<section class="card"><div class="ch"><h2>Das läuft gut</h2><span class="m">'+I.G.length+' Stärken</span></div><ul class="ibins ibg">'
+    +I.G.slice(0,ui.ibAll?99:4).map(function(x){return '<li class="g"><span>'+svgI("check",15)+'</span><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div></li>';}).join("")
+    +'</ul>'+(I.G.length>4?'<div style="margin-top:12px"><button class="lnk" data-a="iball">'+(ui.ibAll?'Weniger anzeigen':'Alle '+I.G.length+' anzeigen')+'</button></div>':'')+'</section>';
+  h+=ibGoalCard(v,R);
   /* Veränderung zur Messung davor */
   if(pv){
     var dm=v.smm!=null&&pv.smm!=null?r1(v.smm-pv.smm):null,df=v.fm!=null&&pv.fm!=null?r1(v.fm-pv.fm):null,days=Math.round((P(sel)-P(L[ix-1].d))/864e5),sum;
@@ -3542,18 +3638,12 @@ function rBody(){
     +(v.smm!=null?ibBar("Skelettmuskeln",v.smm,R.smm[0],R.smm[1],"kg","up"):'')
     +(v.fm!=null?ibBar("Körperfettmasse",v.fm,R.fm[0],R.fm[1],"kg","mid"):'')
     +(v.pbf!=null?ibBar("Körperfett",v.pbf,R.pbf[0],R.pbf[1],"%","mid"):'')+'</div>'+ibComp(v)+'</section>';
-  /* Stärken und Baustellen */
-  if(I.G.length||I.W.length)h+='<section class="card"><div class="ch"><h2>Stärken und Baustellen</h2></div><ul class="ibins">'
-    +I.W.map(function(x){return '<li class="w"><span>!</span><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div></li>';}).join("")
-    +I.G.slice(0,ui.ibAll?99:Math.max(2,4-I.W.length)).map(function(x){return '<li class="g"><span>'+svgI("check",15)+'</span><div><b>'+esc(x[0])+'</b><small>'+esc(x[1])+'</small></div></li>';}).join("")
-    +'</ul>'+(I.G.length>Math.max(2,4-I.W.length)?'<div style="margin-top:12px"><button class="lnk" data-a="iball">'+(ui.ibAll?'Weniger anzeigen':'Alle '+I.G.length+' Stärken anzeigen')+'</button></div>':'')+'</section>';
-  h+='<section class="card"><div class="ch"><h2>Was du tun kannst</h2></div><ol class="ibtodo">'+I.T.map(function(t){return '<li>'+esc(t)+'</li>';}).join("")+'</ol></section>';
   /* Körperteile */
   var fm=ui.ibSeg==="f"?"f":"l",fig=ibFig(v,fm);
   if(fig||ibFig(v,fm==="f"?"l":"f")){
     h+='<section class="card"><div class="ch"><h2>Körperteile</h2></div><div class="seg sm" role="group" aria-label="Ansicht"><button data-a="ibseg" data-v="l" aria-pressed="'+(fm==="l")+'">Muskeln</button><button data-a="ibseg" data-v="f" aria-pressed="'+(fm==="f")+'">Fett</button></div>'
       +(fig||'<p class="m" style="font-size:14px">Für diese Ansicht sind keine Werte eingetragen.</p>')
-      +'<p class="m nline">'+(fm==="f"?'Grün = unter dem Normwert, gelb = darüber, rot = deutlich darüber.':'Grün = über dem Normwert, gelb = normal, rot = darunter.')+' 100 % = Normwert für deine Größe und dein Gewicht.</p></section>';
+      +'<p class="m nline">'+(fm==="f"?'Grün = unter dem Normwert, gelb = darüber, rot = deutlich darüber.':'Grün = über dem Normwert, gelb = normal, rot = darunter.')+' 100 % = Normwert für deine Größe und dein Gewicht.</p>'+ibWater(v)+'</section>';
   }
   /* Gesundheitswerte */
   var hv=[];
@@ -3562,6 +3652,8 @@ function rBody(){
   if(v.ecw!=null)hv.push(["EZW/GKW",String(v.ecw).replace(".",","),v.ecw<=.39?"pos":"warn",v.ecw<=.39?"ausgeglichen":"etwas hoch"]);
   if(v.ffmi!=null)hv.push(["FFMI",nf(v.ffmi),v.ffmi>=(R.f?16:20)?"pos":"m",v.ffmi>=(R.f?18:22)?"sehr muskulös":v.ffmi>=(R.f?16:20)?"gut trainiert":"durchschnittlich"]);
   if(v.bmr!=null)hv.push(["Grundumsatz",NF0.format(v.bmr)+'<small> kcal</small>',"m","in Ruhe pro Tag"]);
+  if(v.bcm!=null)hv.push(["Körperzellmasse",nf(v.bcm)+'<small> kg</small>',v.ffm&&v.bcm/v.ffm>=.6?"pos":"m",v.ffm&&v.bcm/v.ffm>=.6?"viele aktive Zellen":"aktive Zellen"]);
+  if(v.bmc!=null)hv.push(["Knochenmineral",nf(v.bmc)+'<small> kg</small>',"m","Knochen, stärkt Krafttraining"]);
   if(v.bmi!=null)hv.push(["BMI",nf(v.bmi),v.bmi<=25||(v.pbf!=null&&v.pbf<R.pbf[1])?"pos":"warn",v.bmi>25&&v.pbf!=null&&v.pbf<R.pbf[1]?"hoch durch Muskeln":v.bmi<18.5?"niedrig":v.bmi<=25?"normal":"erhöht"]);
   if(hv.length)h+='<section class="card"><div class="ch"><h2>Gesundheitswerte</h2></div><div class="ibhv">'+hv.map(function(x){return '<div class="tile mt"><span class="lbl">'+x[0]+'</span><span class="tv">'+x[1]+'</span><span class="ibst '+x[2]+'"><i></i>'+x[3]+'</span></div>';}).join("")+'</div></section>';
   /* Verlauf */
@@ -3575,7 +3667,17 @@ function rBody(){
   if(!ro)h+='<button class="btn pri wide lg" data-a="ibnew">Neue Messung eintragen</button>';
   return h;
 }
-function statSw(cur){return '<div class="seg pgsw" role="group" aria-label="Bereich"><button data-a="view" data-v="s" aria-pressed="'+(cur==="s")+'">Training</button><button data-a="view" data-v="k" aria-pressed="'+(cur==="k")+'">Körper-Check</button></div>';}
+/* Umschalter im Reiter Essen: Ernährung und Körper-Check */
+function foodSw(cur){return '<div class="seg pgsw" role="group" aria-label="Bereich"><button data-a="view" data-v="e" aria-pressed="'+(cur==="e")+'">'+svgI("food",16)+'Ernährung</button><button data-a="view" data-v="k" aria-pressed="'+(cur==="k")+'">'+svgI("weight",16)+'Körper-Check</button></div>';}
+/* Kleine Brücke zwischen beiden Seiten: neueste Messung auf der Essen-Seite, Ernährungsziel im Körper-Check */
+function ibMini(){
+  var L=ibList();if(!L.length)return '';var x=L[L.length-1],v=ibFull(x.v);
+  return '<button class="ibmini" data-a="view" data-v="k"><span class="lbl">Körper-Check · '+fmt(x.d)+'</span><span class="ibmv">'+(v.pbf!=null?'<b>'+nf(v.pbf)+'<small> % Fett</small></b>':'')+(v.smm!=null?'<b>'+nf(v.smm)+'<small> kg Muskeln</small></b>':'')+'</span><span class="ibma" aria-hidden="true">›</span></button>';
+}
+function nuMini(){
+  var T=NU.g?nTargets():null;if(!T)return '';var g=NU.g;
+  return '<button class="ibmini" data-a="view" data-v="e"><span class="lbl">Dein Ernährungsziel · '+(g.mode==="cut"?'Cut':g.mode==="bulk"?'Bulk':'Halten')+'</span><span class="ibmv"><b>'+NF0.format(T.kcal)+'<small> kcal</small></b><b>'+T.P+'<small> g Eiweiß</small></b></span><span class="ibma" aria-hidden="true">›</span></button>';
+}
 /* Eingabe */
 function ibInp(k,lbl,unit,cur,lv){return '<label for="ib-'+k+'">'+lbl+(unit?' <small>('+unit+')</small>':'')+'<input id="ib-'+k+'" inputmode="decimal" autocomplete="off" placeholder="'+(lv[k]!=null?'zuletzt '+nf(lv[k]):'')+'" value="'+(cur[k]!=null?String(cur[k]).replace(".",","):'')+'"></label>';}
 function ibSegInp(a,b,ua,ub,cur,title){
@@ -3589,7 +3691,7 @@ function ibHtml(){
   h+='<label class="lbl" for="ib-d">Datum der Messung</label><input id="ib-d" type="date" max="'+today()+'" value="'+e.d+'">';
   h+='<p class="lbl" style="margin-top:12px">Die wichtigsten Werte</p><div class="mgrid">'+ibInp("w","Gewicht","kg",cur,lv)+ibInp("smm","Skelettmuskeln","kg",cur,lv)+ibInp("fm","Körperfettmasse","kg",cur,lv)+ibInp("pbf","Körperfett","%",cur,lv)+'</div>';
   h+='<details class="nman"'+(cur.tbw!=null||cur.vfl!=null?' open':'')+'><summary>Weitere Werte (Wasser, Viszeralfett, Phasenwinkel …)</summary><div class="mgrid" style="margin-top:8px">'
-    +ibInp("tbw","Körperwasser","l",cur,lv)+ibInp("prot","Proteine","kg",cur,lv)+ibInp("mn","Mineralien","kg",cur,lv)+ibInp("ffm","Fettfreie Masse","kg",cur,lv)+ibInp("vfl","Viszeraler Fettlevel","",cur,lv)+ibInp("ecw","EZW/GKW","z. B. 0,363",cur,lv)+ibInp("pa","Phasenwinkel","°",cur,lv)+ibInp("bmr","Grundumsatz","kcal",cur,lv)+ibInp("h","Größe","cm",cur,{h:lv.h||(NU.g&&NU.g.h)})+'</div></details>';
+    +ibInp("tbw","Körperwasser","l",cur,lv)+ibInp("prot","Proteine","kg",cur,lv)+ibInp("mn","Mineralien","kg",cur,lv)+ibInp("ffm","Fettfreie Masse","kg",cur,lv)+ibInp("vfl","Viszeraler Fettlevel","",cur,lv)+ibInp("ecw","EZW/GKW","z. B. 0,363",cur,lv)+ibInp("pa","Phasenwinkel","°",cur,lv)+ibInp("bmr","Grundumsatz","kcal",cur,lv)+ibInp("bmc","Knochenmineral","kg",cur,lv)+ibInp("bcm","Körperzellmasse","kg",cur,lv)+ibInp("slm","Weiche Magermasse","kg",cur,lv)+ibInp("h","Größe","cm",cur,{h:lv.h||(NU.g&&NU.g.h)})+'</div></details>';
   h+=ibSegInp("sl","sp","kg","%",cur,"Segmentale Mageranalyse (Muskeln je Körperteil)");
   h+=ibSegInp("fk","fp","kg","%",cur,"Segmentale Fettanalyse (Fett je Körperteil)");
   h+='<p class="m" style="font-size:13px">Pflicht ist nur das Gewicht. BMI, FFMI und fehlende Werte rechnet die App selbst aus. Komma oder Punkt gehen beide.</p>';
@@ -3599,12 +3701,14 @@ function ibHtml(){
 }
 function ibRead(){
   var v={},g=function(id){var el=$("ib-"+id);return el?num(el.value):null;};
-  IBF.forEach(function(f){var x=g(f[0]);if(x!=null)v[f[0]]=x;});
-  IBA.forEach(function(a){var r=[0,1,2,3,4].map(function(i){return g(a[0]+i);});if(r.some(function(x){return x!=null;}))v[a[0]]=r;});
+  /* Werte ohne eigenes Eingabefeld (z. B. Wasser je Körperteil) bleiben beim Bearbeiten erhalten */
+  var e=ui.ibE||{},base=ui.ibPre||(e.o&&IB[e.o]&&IB[e.o].v)||{};
+  IBF.forEach(function(f){var x=g(f[0]);if(x!=null)v[f[0]]=x;else if(!$("ib-"+f[0])&&base[f[0]]!=null)v[f[0]]=base[f[0]];});
+  IBA.forEach(function(a){var r=[0,1,2,3,4].map(function(i){return g(a[0]+i);});if(r.some(function(x){return x!=null;}))v[a[0]]=r;else if(!$("ib-"+a[0]+"0")&&base[a[0]])v[a[0]]=base[a[0]];});
   return v;
 }
 var IBPROMPT='Auf dem Foto ist ein Körperanalyse-Bericht (z. B. InBody). Lies die Messwerte exakt ab, nicht schätzen. Nimm die gemessenen Werte, nicht die Normbereiche in Klammern. '
-  +'Antworte nur mit JSON: {"date":"JJJJ-MM-TT oder leer","w":Gewicht kg,"smm":Skelettmuskelmasse kg,"fm":Körperfettmasse kg,"pbf":Körperfett %,"tbw":Gesamtkörperwasser l,"prot":Proteine kg,"mn":Mineralien kg,"ffm":Fettfreie Masse kg,"bmi":BMI,"bmr":Grundumsatz kcal,"vfl":Viszeraler Fettlevel,"ecw":EZW/GKW-Verhältnis,"pa":Phasenwinkel Grad,"ffmi":FFMI,"h":Größe cm,'
+  +'Antworte nur mit JSON: {"date":"JJJJ-MM-TT oder leer","w":Gewicht kg,"smm":Skelettmuskelmasse kg,"fm":Körperfettmasse kg,"pbf":Körperfett %,"tbw":Gesamtkörperwasser l,"prot":Proteine kg,"mn":Mineralien kg,"ffm":Fettfreie Masse kg,"bmi":BMI,"bmr":Grundumsatz kcal,"vfl":Viszeraler Fettlevel,"ecw":EZW/GKW-Verhältnis,"pa":Phasenwinkel Grad,"ffmi":FFMI,"h":Größe cm,"slm":Weiche Magermasse kg,"bmc":Knochenmineralgehalt kg,"bcm":Körperzellmasse kg,"se":[EZW/GKW je Segment in derselben Reihenfolge wie unten],'
   +'"sl":[Magermasse kg rechter Arm, linker Arm, Rumpf, rechtes Bein, linkes Bein],"sp":[Magermasse % in derselben Reihenfolge],"fk":[Fett kg je Segment],"fp":[Fett % je Segment],"readable":true}. '
   +'Werte, die nicht zu sehen sind, lässt du weg. Wenn kein Bericht lesbar ist: {"readable":false}.';
 function ibPhoto(file){
@@ -3870,6 +3974,7 @@ function nWeightCard(T){
       h+='<div class="nwgoal"><div class="mtop"><span class="m">Ziel '+nf(g.tw)+' kg</span><b>'+(rest<=0.1?'erreicht':'noch '+nf(rest)+' kg')+'</b></div><span class="nbb"><i style="width:'+(rest<=0.1?100:pr*100).toFixed(1)+'%"></i></span></div>';
     }
   }else h+='<p class="m" style="margin:0;font-size:14px">Wieg dich morgens, dann siehst du hier deinen Verlauf.</p>';
+  h+=ibMini();
   if(!ro&&!(BW[td]&&BW[td].v!=null))h+='<div class="bwin"><label class="vh" for="bw-n">Gewicht heute in kg</label><input id="bw-n" inputmode="decimal" enterkeyhint="done" autocomplete="off" placeholder="Heute wiegen, z. B. '+(last?nf(last.v):'80')+'"><button class="btn pri" data-a="bwadd" data-in="bw-n">Speichern</button></div>';
   else if(!ro)h+='<p class="m nline" style="margin-top:6px">Heute gewogen: <b>'+nf(BW[td].v)+' kg</b> · <button class="lnk" data-a="bwdel">ändern</button></p>';
   return h+'</section>';
@@ -3981,7 +4086,7 @@ function progData(from,to){
   return o.sort(function(a,b){return b.p-a.p;});
 }
 function rStats(){
-  var ix=dateIndex(),B=buckets(),td=today(),from=B[0].f,to=B[B.length-1].t,end=to<td?to:td,weekly=ui.stR==="4w"||ui.stR==="3m",pr=prData(),st=streakInfo(ix),h=vhead("Statistik");h+=statSw("s");
+  var ix=dateIndex(),B=buckets(),td=today(),from=B[0].f,to=B[B.length-1].t,end=to<td?to:td,weekly=ui.stR==="4w"||ui.stR==="3m",pr=prData(),st=streakInfo(ix),h=vhead("Statistik");
   h+='<div class="seg sm" role="group" aria-label="Zeitraum">'+[["4w","4 Wochen"],["3m","3 Monate"],["1y","1 Jahr"],["all","Alles"]].map(function(x){return '<button data-a="str" data-v="'+x[0]+'" aria-pressed="'+(ui.stR===x[0])+'">'+x[1]+'</button>';}).join("")+'</div>';
   var span=Math.round((P(end)-P(from))/864e5)+1,C=periodStats(ix,from,end),Pv=ui.stR==="all"?null:periodStats(ix,add(from,-span),add(from,-1));
   /* Durchschnitt erst ab der Woche des ersten Trainings, damit leere Wochen vor dem Start nicht mitzählen. */
@@ -4744,8 +4849,14 @@ if(APP){try{navigator.storage&&navigator.storage.persist&&navigator.storage.pers
 /* Einmalig: Körper-Check vom 13.11.2026 übernehmen (auf Wunsch fest eingebaut). Ein Merker verhindert, dass eine gelöschte Messung wiederkommt. */
 (function(){
   var F="trainings-tracker-ibseed1",d="2026-11-13";if(ro||lsGet(F))return;
-  if(!IB[d]){var v=cleanIbV({w:84,smm:42,fm:11.4,pbf:13.6,tbw:52.9,prot:14.6,mn:5.07,ffm:72.6,bmi:25.9,bmr:1937,vfl:4,ecw:.363,pa:7.5,ffmi:22.4,h:180,sl:[4.27,4.28,31.9,10.66,10.58],sp:[120.2,120.4,112.5,107.9,107.1],fk:[.4,.4,6.2,1.6,1.6],fp:[62.8,63.4,138.2,87.1,85.7]}),t=Date.now();
+  if(!IB[d]){var v=cleanIbV({w:84,smm:42,fm:11.4,pbf:13.6,tbw:52.9,prot:14.6,mn:5.07,ffm:72.6,bmi:25.9,bmr:1937,vfl:4,ecw:.363,pa:7.5,ffmi:22.4,h:180,slm:68.4,bmc:4.16,bcm:48.3,sl:[4.27,4.28,31.9,10.66,10.58],sp:[120.2,120.4,112.5,107.9,107.1],fk:[.4,.4,6.2,1.6,1.6],fp:[62.8,63.4,138.2,87.1,85.7],se:[.372,.374,.362,.357,.362]}),t=Date.now();
     if(v){IB[d]={v:v,u:t};if(!BW[d]){BW[d]={v:84,u:t};IB[d].b=1;}bwDirty=true;saveLocal();}}
+  lsSet(F,"1");
+})();
+/* Einmalig: Zusatzwerte aus dem Bericht vom 13.11. (Knochen, Zellmasse, Wasser je Körperteil) ergänzen, falls die Messung sie noch nicht hat */
+(function(){
+  var F="trainings-tracker-ibseed2",d="2026-11-13";if(ro||lsGet(F))return;
+  var e=IB[d];if(e&&e.v&&e.v.bmc==null&&e.v.w===84&&e.v.smm===42){var nv=cleanIbV(Object.assign({},e.v,{slm:68.4,bmc:4.16,bcm:48.3,se:[.372,.374,.362,.357,.362]}));if(nv){e.v=nv;e.u=Date.now();bwDirty=true;saveLocal();}}
   lsSet(F,"1");
 })();
 ui.tkey=viewKey(ui.tdate);
