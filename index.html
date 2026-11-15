@@ -2964,7 +2964,6 @@ function rFood(){
   if(APP)setTimeout(function(){zxing().catch(function(){});},1200);
   if(!T)return h+goalForm(true);
   if(ui.ngEdit&&!ro)return h+goalForm(false);
-  nAutoAdj(T);T=nTargets();
   var s=nSum(d),day=nDay(d);
   h+=nWeekStrip(d,T);
   var left=T.kcal-s.k,pl=Math.round(T.P-s.p);
@@ -3719,10 +3718,10 @@ function nCoach(T){
   var low=0,logged=0;for(var i=1;i<=7;i++){var s=nSum(add(td,-i));if(s.k>0){logged++;if(s.k<T.kcal*.55)low++;}}
   if(low>=2)o.push({c:"warn",t:"Fehlt da etwas?",x:"An "+low+" der letzten 7 Tage hast du unter "+NF0.format(T.kcal*.55)+" kcal eingetragen. Wenn Getränke, Öl, Soßen oder Snacks fehlen, stimmen Auswertung und Anpassung nicht."});
   var raw=nAdaptRaw();
-  if(raw&&(raw.est<T.calc*.7||raw.est>T.calc*1.35))o.push({c:"warn",t:"Das kommt mir komisch vor",x:"Laut Einträgen isst du Ø "+NF0.format(raw.avg)+" kcal, dein Gewicht ändert sich aber um "+(raw.wk>0?"+":"−")+nf(Math.abs(raw.wk))+" kg pro Woche. Das passt nicht zusammen. Meist fehlt etwas beim Eintragen, oder das Gewicht schwankt (Wasser, Salz, Kreatin). Ich passe deshalb noch nichts automatisch an."});
+  if(raw&&(raw.est<T.calc*.7||raw.est>T.calc*1.35))o.push({c:"warn",t:"Das kommt mir komisch vor",x:"Laut Einträgen isst du Ø "+NF0.format(raw.avg)+" kcal, dein Gewicht ändert sich aber um "+(raw.wk>0?"+":"−")+nf(Math.abs(raw.wk))+" kg pro Woche. Das passt nicht zusammen. Meist fehlt etwas beim Eintragen, oder das Gewicht schwankt (Wasser, Salz, Kreatin)."});
   /* 3. Gewichtsverlauf passt nicht zum Ziel */
   if(R.ok&&g.mode==="cut"&&g.rate>0){
-    if(R.wk>-0.1)o.push({c:"warn",t:R.wk>0.15?"Du nimmst zu statt ab":"Du nimmst gerade nicht ab",x:"Trend der letzten "+R.span+" Tage: "+(R.wk>0?"+":R.wk<0?"−":"±")+nf(Math.abs(R.wk))+" kg pro Woche, geplant sind −"+nf(g.rate)+" kg. Trag 1–2 Wochen wirklich alles ein, dann passe ich deinen Bedarf automatisch an. Oder senke dein Ziel jetzt um 150 kcal.",b:[["nkc","−150 kcal"]]});
+    if(R.wk>-0.1)o.push({c:"warn",t:R.wk>0.15?"Du nimmst zu statt ab":"Du nimmst gerade nicht ab",x:"Trend der letzten "+R.span+" Tage: "+(R.wk>0?"+":R.wk<0?"−":"±")+nf(Math.abs(R.wk))+" kg pro Woche, geplant sind −"+nf(g.rate)+" kg. Bleibt das 2 Wochen so, senke dein Ziel um 150 kcal. Das machst du selbst mit dem Knopf, automatisch ändert sich nichts.",b:[["nkc","−150 kcal"]]});
     else if(R.wk<-1.5*g.rate&&R.wk<-0.6)o.push({c:"warn",t:"Du nimmst schneller ab als geplant",x:nf(Math.abs(R.wk))+" kg pro Woche statt "+nf(g.rate)+" kg. Zu schnell kostet Muskeln und Kraft.",b:[["nkc+","+150 kcal"]]});
     else if(!o.length)o.push({c:"ok",t:"Läuft nach Plan",x:"Trend: −"+nf(Math.abs(R.wk))+" kg pro Woche (Ziel −"+nf(g.rate)+" kg). Weiter so."});
   }else if(R.ok&&g.mode==="bulk"&&g.rate>0){
